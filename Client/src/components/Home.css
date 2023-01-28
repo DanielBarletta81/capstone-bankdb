@@ -1,0 +1,13 @@
+div.card{
+    background-color: aquamarine;
+    box-sizing: border-box;
+    
+    width: 50%;
+    height: auto;
+    border-style: ridge;
+    border-width: 5px;
+    margin-left: 50px;
+    margin-top: 50px;
+    padding: 10px 5px 10px 5px;
+
+}

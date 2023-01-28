@@ -1,0 +1,73 @@
+
+
+nav.navbar.navbar-expand-lg.navbar-light{
+   
+ margin: 10px;
+  width: max-content;
+  border-style: groove;
+   
+   border-color: rgb(31, 79, 190);
+   border-width: 8px;
+   
+}
+div.me-auto.navbar-nav{
+    justify-items: right;
+    position: relative;
+    border-radius: 10%;
+    border-color: rgb(27, 37, 172);
+    border-style: ridge;
+    border-width: 5px;
+    margin-left: 100px;
+    padding-left:25px ;
+    padding-right: 25px;
+   padding-top: 15px;
+    padding-bottom: 15px;
+    gap: 30px;
+    box-sizing: content-box;
+    width: auto;
+    background-color: rgb(34, 94, 147);
+}
+div#basic-navbar-nav.navbar-collapse.collapse{
+
+    padding-top: 5px;
+    padding-bottom: 5px;
+    justify-self: flex-end;
+}
+a{
+    display: flex;
+    text-decoration: none;
+    font-weight: 800;
+    justify-content: center;
+   color:rgb(1, 0, 6);
+    padding: 5px;
+    border-radius: 20%;
+    background-color: rgb(140, 197, 231);
+    font: rgb(0, 0, 0);
+   font-family: cursive;
+    font-size: 26px;
+   width: auto;
+   
+}
+span.navbar-brand{
+    padding-right: 100px;
+    margin-left: 15px;
+    margin-right: auto;
+    padding-left: 0;
+    font-family: fantasy;
+    font-weight: 900;
+    font-style: oblique;
+    font-size: 40px;
+    
+}
+span.fa-solid.fa-guarani-sign{
+    height: 50px;
+   font-size: 40px;
+    background-color: rgb(33, 153, 245);
+    border-width: 5px;
+    border-color: rgb(247, 236, 85);
+    border-style: groove;
+    border-radius: 55%;
+    padding: 10px 50px;
+    margin-right: 10px;
+    
+}
