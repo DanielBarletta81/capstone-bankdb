@@ -1,0 +1,8 @@
+div.login-card.card{
+    width: 700;
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    background-color: cadetblue;
+    padding: 25, 50;
+}

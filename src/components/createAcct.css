@@ -1,0 +1,19 @@
+
+div.card-header{
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    align-content: center;
+    font-size: x-large;
+    font-weight: 700;
+    background-color: lavender;
+}
+div.acct-card.card{
+    display: grid;
+    float: left;
+    position: relative;
+    margin: 25, 50, 50, 25;
+    padding: 25;
+    background-color: aqua;
+    min-height: 40%vh;
+        min-width: 40%vh;
+        border-width: 10px;
+}
