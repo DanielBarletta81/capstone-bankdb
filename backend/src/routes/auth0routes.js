@@ -11,6 +11,8 @@ var options = {
   data: {initiate_login_uri: 'https://localhost:3000/login'}
 };
 
+//https://manage.auth0.com/#/connections/database
+
 axios.request(options).then(function (response) {
   console.log(response.data);
 }).catch(function (error) {

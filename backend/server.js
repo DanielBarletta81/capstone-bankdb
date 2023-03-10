@@ -2,21 +2,45 @@ const dotenv = require ('dotenv');
 dotenv.config();
 const mongoose = require ('mongoose');
 const express = require('express');
+
 const path = require('path');
 const cors = require ('cors');
 const bodyParser = require('body-parser');
+
+
 //const uuid = require('uuid');
 //const session = require('express-session');
 const connectDB = require ('./src/db/dbConn.js');
 //const sessionOptions = require('./src/middleware/sessions');
-
-
+// get authentication router from authenticate.js
+const { initializeApp } = require("firebase/app");
+require('firebase/auth');
 //connect MongoDB
 connectDB();
 
 var app = express();
 
 var port = process.env.PORT;
+
+
+
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "process.env.FIREBASE_API",
+  authDomain: "process.env.FIREBASE_AUTH_DOMAIN",
+    projectId: "process.env.FIREBASE_PROJ_ID",
+  storageBucket: "process.env.FIREBASE_STOR_BUCKET",
+  messagingSenderId: "process.env.FIREBASE_MESS_SEND_ID",
+  appId: "process.env.FIREBASE_APP_ID",
+ 
+};
+
+// Initialize Firebase
+
 
 //bodyParser
 app.use(bodyParser.json());
@@ -32,24 +56,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 //     }
 // });
             
-// var config = {
-//     method: 'post',
-//     url: process.env.MONGO_URL,
-//     headers: {
-//       'Content-Type': 'application/json',
-//       'Access-Control-Request-Headers': '*',
-//       'api-key': process.env.MONGO_API_KEY,
-//     },
-//     data: data
-// };
-            
-// axios(config)
-//     .then(function (response) {
-//         console.log(JSON.stringify(response.data));
-//     })
-//     .catch(function (error) {
-//         console.log(error);
-//     });
+
+
 
 app.use(express.static(path.join(__dirname, 'public')));
 // app.use(express.static('public'));
@@ -78,6 +86,9 @@ app.use(cors());
 
 // api routes
 app.use('/account', require('./src/routes/userRoutes.js'));
+
+// auth routes
+// app.use('/auth', require('./src/routes/fireAuthRoutes'));
 
 //only listen if connected to DB
 mongoose.connection.once('open', () => {

@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom'
-
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { Form, Button, Card } from 'react-bootstrap';
 import './login.css';
+
+
 export const Login = () => {
- 
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -54,3 +56,18 @@ export const Login = () => {
       
     }
 
+function signInUser() {
+  
+
+const auth = getAuth();
+signInWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+    // Signed in 
+    const user = userCredential.user;
+    // ...
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+  });
+}

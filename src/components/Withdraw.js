@@ -1,7 +1,20 @@
 import React, {useState} from 'react'
 import { Button, Card, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
+const auth = getAuth();
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // User is signed in, see docs for a list of available properties
+  
+    const uid = user.uid;
+    // ...
+  } else {
+    // User is signed out
+    
+  }
+});
 
 export function Withdraw() {
   

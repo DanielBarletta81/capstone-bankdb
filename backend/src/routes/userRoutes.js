@@ -1,6 +1,8 @@
 
 const express = require('express');
 const { ObjectId } = require('mongodb');
+const fbUser = require('../middleware/authenticate');
+
 const router = express.Router();
 
 const User = require('../model/user');
@@ -8,7 +10,7 @@ const User = require('../model/user');
 // Routes
     
 //Register a new user
-router.post('/register', async (req, res) => {
+router.post('/register',fbUser, async (req, res) => {
   try {
     await User.create({ username: req.body.username, email: req.body.email, password: req.body.password })
     .then(data => {
@@ -19,26 +21,7 @@ router.post('/register', async (req, res) => {
     res.send(err.message);
   }
 });
-//  const user = req.body;
 
-//   const takenUsername = await User.findOne({ username: user.username });
-//   const takenEmail = await User.findOne({ email: user.email });
-
-//   if (takenUsername || takenEmail) {
-//     res.json({ message: "Username or Email already in use!" })
-//   } else {
-//     user.password = await bcrypt.hash(req.body.password, 10)
-
-//     const dbUser =  new  User({
-//       username: user.username,
-//       email: user.email,
-//       password: user.password
-//     })
-
-//      dbUser.save()
-//     res.json({ message: 'User Registered!' })
-//   }
-// })
 
     //Login user and authenticate
 router.post('/login', async (req, res) => {
@@ -57,7 +40,9 @@ router.post('/login', async (req, res) => {
   }
     });
 
-       
+router.get('/currentUser', fbUser, async (req, res) => {
+
+})    
 
 // router.get('/allUsers', getAll);
 
