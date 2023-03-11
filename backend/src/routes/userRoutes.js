@@ -1,18 +1,19 @@
 
 const express = require('express');
 const { ObjectId } = require('mongodb');
-const fbUser = require('../middleware/authenticate');
+const decodeIDToken = require('../middleware/fireb_admin');
+//const fbUser = require('../middleware/authenticate');
 
 const router = express.Router();
 
 const User = require('../model/user');
 
 // Routes
-    
+
 //Register a new user
-router.post('/register',fbUser, async (req, res) => {
+router.post('/register',decodeIDToken, async (req, res) => {
   try {
-    await User.create({ username: req.body.username, email: req.body.email, password: req.body.password })
+    await User.create({  email: req.body.email, password: req.body.password })
     .then(data => {
         res.send(data);
         console.log(data)
@@ -24,13 +25,13 @@ router.post('/register',fbUser, async (req, res) => {
 
 
     //Login user and authenticate
-router.post('/login', async (req, res) => {
+router.post('/login', decodeIDToken, async (req, res) => {
 
   const userLoggingIn = req.body;
 
-  await User.findOne({username: userLoggingIn.username})
+  await User.findOne({email: userLoggingIn.email})
   try {
-    await User.create({ username: req.body.username, email: req.body.email, password: req.body.password })
+    await User.create({ email: req.body.email, password: req.body.password })
     .then(data => {
         res.send(data);
         console.log(data)
@@ -40,7 +41,7 @@ router.post('/login', async (req, res) => {
   }
     });
 
-router.get('/currentUser', fbUser, async (req, res) => {
+router.get('/currentUser', decodeIDToken, async (req, res) => {
 
 })    
 

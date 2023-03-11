@@ -1,6 +1,6 @@
-import { XCircleIcon } from "@heroicons/react/solid";
+import BsFillExclamationTriangleFill from 'react-icons/bs/index.js';
 
-import { useAuth } from "./authContext";
+import { useAuth } from "./authContext.js";
 
 export default function ErrorMessage() {
     const { error, setError } = useAuth();
@@ -11,11 +11,11 @@ export default function ErrorMessage() {
                 <div className="rounded-md max-w-md w-full bg-red-50 p-4 mt-4">
                     <div className="flex">
                         <div className="flex-shrink-0">
-                            <XCircleIcon
-                                onClick={() => setError("")}
-                                className="h-5 w-5 text-red-400"
-                                aria-hidden="true"
-                            />
+
+         <BsFillExclamationTriangleFill onClick={() => setError("")}
+                className="h-5 w-5 text-red-400"
+                                    aria-hidden="true" />
+
                         </div>
                         <div className="ml-3">
                             <h3 className="text-sm font-medium text-red-800">

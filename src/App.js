@@ -1,7 +1,9 @@
 import React from 'react';
 
 import {  BrowserRouter, Route, Routes} from 'react-router-dom';
-
+import { AuthProvider } from './authContext.js';
+//import { auth }  from './fireAuth.js';
+import ErrorMessage from './errorMsg.js';
 import './App.css';
 
 import { NavBar } from './components/Navbar.js';
@@ -19,13 +21,13 @@ import { Welcome } from './components/Welcome.js';
 
 
 function App() {
-
+ 
   return (
-
+<AuthProvider>
     <BrowserRouter>
     <div className="container-fluid">
  <NavBar />
-
+<ErrorMessage/>
     <Routes>
     <Route exact path="/" element= {<Home/> } />
           
@@ -48,7 +50,8 @@ function App() {
          
       </div>
       <Footer/>
-  </BrowserRouter>
+      </BrowserRouter>
+      </AuthProvider>
   );
 }
 

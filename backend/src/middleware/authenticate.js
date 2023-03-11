@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const firebaseAdmin = require("./fireb_admin");
-const User = require('../model/user');
+
 
 
  const fbUser = async (req, res, next) => {

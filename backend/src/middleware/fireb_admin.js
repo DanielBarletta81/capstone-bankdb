@@ -1,14 +1,51 @@
-const {initializeApp} = require('firebase/app');
+const User = require('../model/user');
 const admin = require('firebase-admin');
 
 
 var serviceAccount = require("../../serviceAccountKey.json");
 
-const firebase = admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: 'process.env.MONGODB_URL'
 });
 
-module.exports = {firebase};
+async function decodeIDToken(req, res, next) {
+  const header = req.headers?.authorization;//had ? before auth
+  if (header !== 'Bearer null' && req.headers?.authorization?.startsWith('Bearer ')) {
+const idToken = req.headers.authorization.split('Bearer')[1];
+try {
+      const decodedToken = await admin.auth().verifyIdToken(idToken);
+    req['currentUser'] = decodedToken;
+
+    if (!decodedToken) {
+      // Unauthorized
+      return res.sendStatus(401);
+    }
+
+    const usersCollection =  await User.find({});
+
+    const user = await usersCollection.findOne({
+      firebaseId: firebaseUser.user_id
+    });
+
+    if (!user) {
+      // Unauthorized
+      return res.sendStatus(401);
+    }
+
+    req.user = user;
+
+    next();
+
+    } catch (err) {
+         res.sendStatus(401);
+      console.log(err);
+    }
+  }
+next();
+}
+module.exports = decodeIDToken;
+
 
 
 

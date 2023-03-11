@@ -9,7 +9,7 @@ authRouter.get("/auth", authenticate, async (req, res) => {
   res.status(200).json(req.user);
 });
 
-authRouter.post("/auth/register", async (req, res) => {
+authRouter.post("/auth/register", authenticate, async (req, res) => {
   const { email, username, password } = req.body;
 
   if (!email || !username || !password) {

@@ -13,8 +13,12 @@ const bodyParser = require('body-parser');
 const connectDB = require ('./src/db/dbConn.js');
 //const sessionOptions = require('./src/middleware/sessions');
 // get authentication router from authenticate.js
-const { initializeApp } = require("firebase/app");
+
 require('firebase/auth');
+
+const decodeIDToken = require('./src/middleware/fireb_admin');
+
+
 //connect MongoDB
 connectDB();
 
@@ -22,7 +26,7 @@ var app = express();
 
 var port = process.env.PORT;
 
-
+app.use(decodeIDToken);
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries

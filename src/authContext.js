@@ -1,11 +1,11 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 
-import auth from "./fireAuth";
+import { auth } from "./fireAuth.js";
 
 const AuthContext = createContext();
 
@@ -16,6 +16,7 @@ export function useAuth() {
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   function register(email, password) {
     return createUserWithEmailAndPassword(auth, email, password);
@@ -38,6 +39,8 @@ export function AuthProvider({ children }) {
     currentUser,
     login,
     register,
+    error,
+    setError
   };
 
   return (

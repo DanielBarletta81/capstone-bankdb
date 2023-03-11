@@ -1,14 +1,12 @@
-import React, {useState} from 'react';
-import { NavLink} from 'react-router-dom';
-
+import React, {useState, useEffect} from 'react';
+import { NavLink, useNavigate} from 'react-router-dom';
+import { useAuth} from '../authContext.js';
 import './createAcct.css';
 import { Card, Button, Form } from 'react-bootstrap';
 //import { createUser, auth } from '../firebase';
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-
-
 
 export const CreateAccount = () => {
+
 
 
 
@@ -35,15 +33,27 @@ export const CreateAccount = () => {
     
 
   function CreateAcctForm (){
-    const [username, setUsername] = useState('');
+    // const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
   
+    const { currentUser, register} = useAuth(); // Get setError
+    const navigate = useNavigate();
+
+    const [loading, setLoading] = useState(false);
+
+    const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (currentUser) {
+      navigate("/");
+    }
+  }, [currentUser, navigate]);
 
   async function handleFormSubmit(e) {
     e.preventDefault();
 
-    if (password !== confirmPassword) {
+    if (!password) {
       return setError("Passwords do not match");
     }
 
@@ -91,8 +101,8 @@ export const CreateAccount = () => {
           <>
             <Form>
         
-              <Form.Label className="username"> Create Username
-              </Form.Label>
+             // <Form.Label className="username"> Create Username
+             // </Form.Label>
               {/* <Form.Control type="text"
                 label="Username"
                 value={username}
