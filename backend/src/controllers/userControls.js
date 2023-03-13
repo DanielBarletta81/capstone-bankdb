@@ -1,58 +1,136 @@
-// const User = require ('./src/model/user.js');
+const mongoose = require('mongoose');
 
-const express = require('express');
-const router = express.Router();
-const userControl = require('../routes/userDBFunctions');
+const User  = require('../model/user');
+const extend = require('lodash/extend');
 
-// routes
-router.post('/authenticate', authenticate);
-router.post('/register', register);
-router.get('/', getAll);
-router.get('/current', getCurrent);
-router.get('/:id', getById);
-router.put('/:id', update);
-router.delete('/:id', _delete);
 
-module.exports = router;
+const create = async (req, res, next) => {
+    const { username, email, password, passwordCheck } = req.body;
+    try {
+        // Check if any of them is undefined
+        if (!username || !email || !password || passwordCheck) {
+            return next()
+    
+        }
+   
 
-function authenticate(req, res, next) {
-    userControl.authenticate(req.body)
-        .then(user => user ? res.json(user) : res.status(400).json({ message: 'Username or password is incorrect' }))
-        .catch(err => next(err));
+        // Check if user already exists in our DB
+        const userExists = await User.findOne({ email }).exec();
+
+        if (userExists) {
+            throw new Error('User already exists!')
+        }
+
+        // Register and store the new user
+        const user = await User.create(
+            {
+                username,
+                email,
+                password,
+
+            }
+        );
+
+        return sendAuth(user, 201, res);
+    } catch (err) {
+        res.json(err.message)
+    }
 }
 
-function register(req, res, next) {
-    userControl.create(req.body)
-        .then(() => res.json({}))
-        .catch(err => next(err));
+const getAll =  async (req, res, next) => {
+    try {
+        let users = await User.find().select(' name email updated created');
+         res.json(users)
+    } catch (err) {
+        return res.status(400).json({
+            error: errorHandler.getErrorMessage(err)
+        })
+    }
 }
 
-function getAll(req, res, next) {
-    userControl.getAll()
-        .then(users => res.json(users))
-        .catch(err => next(err));
+const userByID = async (req, res, next, id) => {
+    try {
+        let user = await User.findById(id);
+        if (!user) {
+            return res.status('400').json({
+                error: "User not found"
+            })
+        }
+        req.profile = user;
+        next()
+    } catch (err) {
+        return res.status('400').json({
+            error: "Unable to retrieve user"
+        })
+    }
 }
 
-function getCurrent(req, res, next) {
-    userControl.getById(req.user.sub)
-        .then(user => user ? res.json(user) : res.sendStatus(404))
-        .catch(err => next(err));
+const read = (req, res) => {
+    
+    return res.json(req.profile);
 }
 
-function getById(req, res, next) {
-    userControl.getById(req.params.id)
-        .then(user => user ? res.json(user) : res.sendStatus(404))
-        .catch(err => next(err));
-}
+const update = async (req, res, next) => {
+    try {
+        let user = req.profile;
+        user = extend(user, req.body);
+        user.updated = Date.now();
+        await user.save();
+     
+        res.json(user);
 
-function update(req, res, next) {
-    userControl.update(req.params.id, req.body)
-        .then(() => res.json({}))
-        .catch(err => next(err));
+    } catch (err) {
+        return res.status(400).json({
+            error: errorHandler.getErrorMessage(err)
+        })
+    }
 }
+const remove = async (req, res, next) => {
+   try {
+       let user = req.profile;
+       let deletedUser = await user.remove();
+      
+       res.json(deletedUser);
+   } catch (error) {
+     return res.status(400).json({
+          error: errorHandler.getErrorMessage(err)
+      })
+   }
+}
+const login = async (req, res, next) => {
+    try {
+        const { email, password } = req.body;
 
-function _delete(req, res, next) {
-    userControl.delete(req.params.id)
-        .then(() => res.json({}))
-        .catch(err => next(err));
+        if (!email || !password) {
+            return next(error("Please provide email and password", 400));
+        }
+
+        const user = await User.findOne({ email }).select("+password"); // Explicitly adding password
+
+        if (!user) {
+            return next(error("Invalid credentials", 401));
+        }
+
+        // Using custom method to compare passwords
+        const isMatched = await user.matchPasswords(password);
+
+        if (!isMatched) {
+            return next(error("Invalid credentials", 401));
+        }
+
+        return sendAuth(user, 200, res);
+    } catch (error) {
+        return next(error);
+    }
 }
+const sendAuth = (user, statusCode, res) => {
+  return res.status(statusCode).json({
+    success: true,
+   username: user.username,
+    email: user.email,
+  
+    token: user.getSignedToken(),
+    expires_at: new Date(Date.now() + process.env.JWT_EXPIRE * 60 * 60 * 1000),
+  });
+};
+    module.exports = {create,login, userByID, getAll, read, update, remove}

@@ -1,19 +1,34 @@
 
 const express = require('express');
 const { ObjectId } = require('mongodb');
-const decodeIDToken = require('../middleware/fireb_admin');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+// const decodeIDToken = require('../middleware/fireb_admin');
 //const fbUser = require('../middleware/authenticate');
-
+//const auth = require('../middleware/authJWT');
 const router = express.Router();
 
 const User = require('../model/user');
 
+const { create, login } = require('../controllers/userControls');
 // Routes
 
 //Register a new user
-router.post('/register',decodeIDToken, async (req, res) => {
+router.route('/register').post(create);
+router.route('/login').post(login);
+
+router.route('/users/:userId')
+
+
+
+    //Login user and authenticate
+router.post('/auth/signin', async (req, res) => {
+
+  const userLoggingIn = req.body;
+
+  await User.findOne({email: userLoggingIn.email})
   try {
-    await User.create({  email: req.body.email, password: req.body.password })
+    await User.create({ username: req.body.username, email: req.body.email, password: req.body.password })
     .then(data => {
         res.send(data);
         console.log(data)
@@ -23,32 +38,20 @@ router.post('/register',decodeIDToken, async (req, res) => {
   }
 });
 
+// Check if token is valid
 
-    //Login user and authenticate
-router.post('/login', decodeIDToken, async (req, res) => {
-
-  const userLoggingIn = req.body;
-
-  await User.findOne({email: userLoggingIn.email})
-  try {
-    await User.create({ email: req.body.email, password: req.body.password })
-    .then(data => {
-        res.send(data);
-        console.log(data)
-      })
-  } catch (err) {   
-    res.send(err.message);
-  }
-    });
-
-router.get('/currentUser', decodeIDToken, async (req, res) => {
-
-})    
+router.get("/api/users", verifyToken, async (req, res) => {
+  const user = await User.findById(req.user);
+  res.json({
+    username: user.username,
+    id: user._id,
+  });
+});  
 
 // router.get('/allUsers', getAll);
 
 // router.get('/getById/:id', getById);
- router.patch('/update/:id', async (req, res) => {
+ router.put('/api/users/:id', async (req, res) => {
   try {
     await User.findByIdAndUpdate(req.params.id, req.body);
     await User.save();

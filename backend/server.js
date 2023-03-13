@@ -14,9 +14,9 @@ const connectDB = require ('./src/db/dbConn.js');
 //const sessionOptions = require('./src/middleware/sessions');
 // get authentication router from authenticate.js
 
-require('firebase/auth');
+// require('firebase/auth');
 
-const decodeIDToken = require('./src/middleware/fireb_admin');
+// const decodeIDToken = require('./src/middleware/fireb_admin');
 
 
 //connect MongoDB
@@ -26,22 +26,22 @@ var app = express();
 
 var port = process.env.PORT;
 
-app.use(decodeIDToken);
+// app.use(decodeIDToken);
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 // // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "process.env.FIREBASE_API",
-  authDomain: "process.env.FIREBASE_AUTH_DOMAIN",
-    projectId: "process.env.FIREBASE_PROJ_ID",
-  storageBucket: "process.env.FIREBASE_STOR_BUCKET",
-  messagingSenderId: "process.env.FIREBASE_MESS_SEND_ID",
-  appId: "process.env.FIREBASE_APP_ID",
+// const firebaseConfig = {
+//   apiKey: "process.env.FIREBASE_API",
+//   authDomain: "process.env.FIREBASE_AUTH_DOMAIN",
+//     projectId: "process.env.FIREBASE_PROJ_ID",
+//   storageBucket: "process.env.FIREBASE_STOR_BUCKET",
+//   messagingSenderId: "process.env.FIREBASE_MESS_SEND_ID",
+//   appId: "process.env.FIREBASE_APP_ID",
  
-};
+// };
 
 // Initialize Firebase
 
@@ -89,7 +89,7 @@ app.use(cors());
 
 
 // api routes
-app.use('/account', require('./src/routes/userRoutes.js'));
+app.use('/api', require('./src/routes/userRoutes.js'));
 
 // auth routes
 // app.use('/auth', require('./src/routes/fireAuthRoutes'));
@@ -97,6 +97,48 @@ app.use('/account', require('./src/routes/userRoutes.js'));
 //only listen if connected to DB
 mongoose.connection.once('open', () => {
     console.log('Actually connected to MongoDB');
+
+function initial() {
+  Role.estimatedDocumentCount((err, count) => {
+    if (!err && count === 0) {
+      new Role({
+        name: "user"
+      }).save(err => {
+        if (err) {
+          console.log("error", err);
+        }
+
+        console.log("added 'user' to roles collection");
+      });
+
+      new Role({
+        name: "employee"
+      }).save(err => {
+        if (err) {
+          console.log("error", err);
+        }
+
+        console.log("added 'employee' to roles collection");
+      });
+
+      new Role({
+        name: "bigboss"
+      }).save(err => {
+        if (err) {
+          console.log("error", err);
+        }
+
+        console.log("added 'bigboss' to roles collection");
+      });
+    }
+  });
+}
+
+
+
+
+
+
     // listen
     app.listen(port, () =>
         console.log(`Server running on port: ${port}`));

@@ -19,12 +19,12 @@ export function NavBar() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Link to ="/">Home</Link>
-                  <Link to="/Login">Login</Link>
+                  <Link to="/login">Login</Link>
                         <Link to="/register">Create Account</Link>
-                         <Link to="/Deposit">Deposit</Link>
-              <Link to="/Withdraw">Withdraw</Link>
-              <Link to="/Transactions">Transactions</Link>
-              <Link to="/AllData"> All Data</Link>
+                         <Link to="/deposit">Deposit</Link>
+              <Link to="/withdraw">Withdraw</Link>
+              <Link to="/transactions">Transactions</Link>
+              <Link to="/allData"> All Data</Link>
                 </Nav>
                 </Navbar.Collapse>
     </Navbar>
