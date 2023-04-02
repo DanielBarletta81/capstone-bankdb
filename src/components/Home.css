@@ -1,13 +1,15 @@
-div.card{
-    background-color: aquamarine;
+div.home-card.card{
+    background-color: rgb(12, 98, 141);
     box-sizing: border-box;
     
     width: 50%;
     height: auto;
     border-style: ridge;
     border-width: 5px;
-    margin-left: 50px;
-    margin-top: 50px;
+    
     padding: 10px 5px 10px 5px;
 
+}
+img.card-img-top.logo{
+max-height: max-content;
 }

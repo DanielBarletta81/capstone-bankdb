@@ -4,7 +4,7 @@ const db = require("../model/dbModel");
 const Role = db.role;
 
 const protect = async (req, res, next) => {
-  let token;
+  let token; 
 
   if (
     req.headers.authorization &&

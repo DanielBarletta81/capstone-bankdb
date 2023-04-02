@@ -1,265 +1,173 @@
-import { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import { Form, Button, Spinner } from "react-bootstrap";
+import {  useState } from "react";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from '../firebase.js';
+import { useNavigate } from "react-router-dom";
+import { Container,Form, Button, Row, Col, Card , Alert} from "react-bootstrap";
+//import { Notify } from "../Toasts/notify.js";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
-import { AuthState } from "../auth/authContext.js";
-import { Notify } from "../Toasts/notify.js";
+import "./createAcct.css";
+import { toast } from "react-toastify";
 
 
- export const CreateAccount = () => {
-  const [credentials, setCredentials] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-   
-  });
-  const [isLoading, setIsLoading] = useState(false);
-  
 
+
+
+
+export const CreateAccount = () => {
   const navigate = useNavigate();
-  const { setAuth } = AuthState('');
-
-  const handleCredentials = (e) => {
-    setCredentials({ ...credentials, [e.target.name]: e.target.value });
-  };
-
   
-  const registerHandler = async (e) => {
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [pwdCheck, setPwdCheck] = useState('');
+  //register validation
+
+  const validPw = () => {
+    let isValid = true;
+    if (password.current.value !== pwdCheck.current.value) {
+      isValid = false;
+      setError('Passwords do not match!')
+    }
+    return isValid;
+  }
+
+  const submitNewUser = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
 
-    // If any field is missing
-    if (
-      !credentials.name ||
-      !credentials.email ||
-      !credentials.password ||
-      !credentials.confirmPassword
-    ) {
-      setIsLoading(false);
-      return Notify("Please Fill all the Fields", "warn");
+    setError('');
+
+    if (validPw()) {
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log(user);
+          navigate("/login");
+        })
+        .catch((error) => {
+          setError(error.message);
+        });
     }
+  }
 
-    // If password and confirm password doesn't match
-    if (credentials.password !== credentials.confirmPassword) {
-      setIsLoading(false);
-      return Notify("Passwords Do Not Match", "warn");
-    }
-
-    // If password is less than 8 characters
-    if (credentials.password.length < 8) {
-      setIsLoading(false);
-      return Notify("Password must be at least 8 characters", "warn");
-    }
-
+  const signupData = () => {
     try {
-      // Register user
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: credentials.name,
-          email: credentials.email,
-          password: credentials.password,
-        
-        }),
-      });
-      const data = await response.json();
+      let data;
+      let user;
+       axios.post('http://localhost:8080/api/signup', data)
+        .then(res => res.data)
+      toast(`Success! Created User: ${user.email}`);
+   navigate('/dashboard');
 
-      if (data.success) {
-        localStorage.setItem("auth", JSON.stringify(data)); // Save auth details in local storage
-        setAuth(data);
-        setIsLoading(false);
-        navigate("/"); // Go to home page
-        return Notify("Your account has been successfully created", "success");
-      } else {
-        setIsLoading(false);
-        return Notify(data.error, "error");
-      }
+      setLoading(false);
+      
     } catch (error) {
-      setIsLoading(false);
-      return Notify("Internal server error", "error");
+      setError(error);
+      console.log(error);
     }
-  };
 
 
-// import React, {useState} from 'react';
-// import { NavLink, useNavigate} from 'react-router-dom';
-// // import { useAuth} from '../authContext.js';
-// import './createAcct.css';
-// import { Card, Button, Form } from 'react-bootstrap';
-// //import AuthService from '../services/authService.js';
-
-// export const CreateAccount = () => {
-
-
-
-
-//   return (<>
-//     <Card className='acct-card'>
-//        <Card.Header> Register here!</Card.Header>
-//         <CreateAcctForm/>
-//     </Card>
-//     </>
-//     )
-  
-// }
-
-
-
-// // function CreateMsg() {
-// //     if(username, email, password !== null)
-// //   return(<>
-// //     <h5>Success!!</h5>
-// //      <Button type="submit"  onClick={() => setShow(true)}
-// //         >Add Another Account</Button>
-// //   </>);
-// // }
-    
-
-//   function CreateAcctForm (){
-//     const [username, setUsername] = useState('');
-//     const [email, setEmail] = useState('');
-//     const [password, setPassword] = useState('');
-//   const [passwordCheck, setPasswordCheck] = useState('');
-//   //  const { currentUser, register} = useAuth(); // Get setError
-//     const navigate = useNavigate();
-
-//   //   const [loading, setLoading] = useState(false);
-
-//   //   const [error, setError] = useState('');
-
-//   // useEffect(() => {
-//   //   if (currentUser) {
-//   //     navigate("/");
-//   //   }
-//   // }, [currentUser, navigate]);
-
-//   // async function handleFormSubmit(e) {
-//   //   e.preventDefault();
-
-//   //   if (!password) {
-//   //     return setError("Passwords do not match");
-//   //   }
-
-//   //   try {
-//   //     setError(""); // Remove error when registering
-//   //     setLoading(true);
-//   //     await register(email, password);
-//   //     navigate("/dashboard");
-//   //   } catch (e) {
-//   //     setError("Failed to register"); // Replace alert
-//   //   }
-
-//   //   setLoading(false);
-//   // }  
-
-//    const handleSubmit = (e) => {
-//      e.preventDefault();
-  
-//  fetch('http://localhost:8080/api/users', {
-//          method: 'POST',
-//          body: JSON.stringify({
-//             username: username,
-//             email: email,
-//            password: password,
-//             passwordCheck: passwordCheck,
-//          }),
-//    headers: {
-//            'Accept': 'application/json',
-//      'Content-type': 'application/json',
-//          },
-//       })
-//          .then((res) => res.json())
-//          .then(() => {
-//             setUsername('');
-//             setEmail('');
-//            setPassword('');
-//            setPasswordCheck('');
-//            alert(`Success! Account for ${username} created.`);
-//            navigate('/welcome');
-//          })
-//          .catch((err) => {
-//             console.log(err.message);
-//          });
-//    };
-
-    
-   return (
-          <>
- <Form className="reg_form" onSubmit={registerHandler}>
-        
- <Form.Group className="mb-3" controlId="username">
-           <Form.Label className="username"> Create Username
-              </Form.Label>
- <Form.Control
-          type="text"
-          name="username"
-          tabIndex="1"
-          placeholder="Enter a username"
-          value={credentials.username || ''}
-          onChange={(e) => handleCredentials(e)}
-           />
- </Form.Group>
-                
- <Form.Group className="mb-3" controlId="email">
-              <Form.Label className="email-address"> Email address
-              </Form.Label>
-              <Form.Control  type="email"
-          name="email"
-          tabIndex="2"
-          placeholder="Enter email"
-          value={credentials.email || ''}
-          onChange={(e) => handleCredentials(e)} />
-                </Form.Group>
-         
- <Form.Group className="mb-3" controlId="password">
-              <Form.Label className="password">
-                Password
-              </Form.Label>
-         <Form.Control
-            type="password"
-          name="password"
-          tabIndex="3"
-          placeholder="Password"
-          value={credentials.password || ''}
-          onChange={(e) => handleCredentials(e)} />
-       </Form.Group>
-         
-          <Form.Group className="mb-3" controlId="confirm_pw">
-         <Form.Label className="password-check">
-                Password
-              </Form.Label>
-              <Form.Control  type="password"
-          name="confirmPassword"
-          tabIndex="4"
-          placeholder="Confirm password"
-          value={credentials.confirmPassword || ''}
-          onChange={(e) => handleCredentials(e)} />
-     </Form.Group>
-                                              
-               <Button
-        tabIndex="6"
-        variant="success"
-        type="submit"
-        className="mb-3"
-        disabled={isLoading}
-      >
-        {isLoading ? (
-          <Spinner animation="border" role="status" size="sm" />
-        ) : (
-          "Create Account"
-        )}
-      </Button>
-             
-            </Form>
-            <h5> Already have an account?{' '}
-              <NavLink to="/login" > Sign in</NavLink>
-            </h5>
-
-          </>
-     
-        )
 }
+
+
+
+
+
+  //   return (<>
+  //     <Card className='acct-card'>
+  //        <Card.Header> Register here!</Card.Header>
+  //         <CreateAcctForm/>
+  //     </Card>
+  //     </>
+  //     )
+  // }
+
+  //  function CreateAcctForm() {
+
+  return (
+    //</> <Notify type= "success"/>
+<Container className="d-flex align-items-center justify-content-center">
+      <Card> 
+     <Card.Header className="text-center mb-6"> Register Here!</Card.Header>
+      
+        {error && <Alert variant="danger">{error }</Alert>}    
+    
+       
+    <Form onSubmit={submitNewUser}>
+      <Row className="mb-3">
+        <Form.Group as={Col} md="28" id="username">
+        <Form.Label >Enter a Username:</Form.Label>
+        <Form.Control
+                onChange={(e) => setUsername(e.target.value)}
+            type="text"
+         
+          placeholder="Username"
+         
+        />
+        <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+        </Form.Group>
+      </Row>
+
+ <Row className="mb-3">
+        <Form.Group  md="4" >
+        <Form.Label> Enter an E-mail:</Form.Label>
+        <Form.Control
+            type= "email"
+           onChange={(e) => setEmail(e.target.value)} 
+          placeholder="E-mail address"
+          autoComplete= "off"
+        />
+        <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+        </Form.Group>
+      </Row>
+
+      <Row>
+        <Form.Group  md="4" id="password">
+          <Form.Label  >Create Password:
+          </Form.Label>
+          <Form.Control
+           onChange={(e) => setPassword(e.target.value)}
+            type="password"
+            
+            placeholder="Password"
+          
+           autoComplete= "off"
+          />
+          <Form.Control.Feedback type="valid">
+            <FontAwesomeIcon icon={faCheck} /> Looks good!</Form.Control.Feedback>
+          <Form.Control.Feedback type="invalid">
+           <FontAwesomeIcon icon={faTimes}/> Looks bad!</Form.Control.Feedback>
+        </Form.Group>
+      </Row>
+<br/>
+      <Row>
+      
+      <Form.Group  md="4" id="pwd-check">
+        <Form.Label>Confirm Password</Form.Label>
+        <Form.Control
+        type="password"
+           onChange={(e) => setPwdCheck(e.target.value)}
+          placeholder="Confirm Password"
+         autoComplete= "off"
+        />
+        <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+      </Form.Group>
+        </Row> 
+     <br/>
+       
+                                              
+      <Button disabled={loading} type="submit" onClick={signupData}>
+        Create Account
+      </Button>
+     
+        </Form>
+      
+     </Card>     
+        </Container>
+  )
+}
+

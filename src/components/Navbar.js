@@ -1,5 +1,5 @@
 import React from 'react';
-import { Nav, Navbar } from 'react-bootstrap';
+import { Nav, Navbar, Container } from 'react-bootstrap';
 
 
 import { Link } from 'react-router-dom';
@@ -9,8 +9,11 @@ import './navbar.css';
 
 
 export function NavBar() {
-    return (<>
-        <Navbar expand="lg">
+
+  return (
+    <>
+  <Container className="d-flex align-items-center justify-content-center">
+        <Navbar expand= 'lg'>
 <span className='fa-solid fa-guarani-sign'></span>
  <Navbar.Brand>
                 Good Bank Inc.</Navbar.Brand>
@@ -27,8 +30,8 @@ export function NavBar() {
               <Link to="/allData"> All Data</Link>
                 </Nav>
                 </Navbar.Collapse>
-    </Navbar>
- </>
+      </Navbar>
+      </Container>
+</>
   )
 }
-

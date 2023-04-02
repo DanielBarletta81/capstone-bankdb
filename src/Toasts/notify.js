@@ -1,5 +1,8 @@
 import { toast } from "react-toastify";
 
+import 'react-toastify/dist/ReactToastify.min.css';
+
+
  export const Notify = (message, type) => {
   if (type === "success") {
     return toast.success(message, {

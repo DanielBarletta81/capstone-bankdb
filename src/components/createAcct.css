@@ -4,16 +4,20 @@ div.card-header{
     align-content: center;
     font-size: x-large;
     font-weight: 700;
-    background-color: lavender;
+    background-color: rgb(60, 145, 224);
+    display: flex;
+    padding: 10px;
 }
-div.acct-card.card{
-    display: grid;
-    float: left;
-    position: relative;
-    margin: 25, 50, 50, 25;
-    padding: 25;
-    background-color: aqua;
-    min-height: 40%vh;
-        min-width: 40%vh;
-        border-width: 10px;
+
+form{
+   padding: 0px;
+   margin: 0;
+   background-color: rgb(47, 162, 216);
+}
+
+div.card-body{
+    background-color: rgb(138, 213, 232);
+    border-style: ridge;
+    border-width: 15;
+    display: flex;
 }

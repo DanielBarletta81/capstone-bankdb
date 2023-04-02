@@ -35,13 +35,13 @@ function initial() {
 
 
       new Role({
-        name: "admin"
+        name: "employee"
       }).save(err => {
         if (err) {
           console.log("error", err);
         }
 
-        console.log("added 'admin' to roles collection");
+        console.log("added 'employee' to roles collection");
       });
     }
   });

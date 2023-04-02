@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 
 import {  BrowserRouter, Route, Routes} from 'react-router-dom';
 
 import './App.css';
-import {PrivateRoute} from './auth/privRoutes.js';
-//import {  UserProvider } from './services/userContext.js';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+
 import { NavBar } from './components/Navbar.js';
 import { Home } from './components/Home.js';
 import { CreateAccount } from './components/CreateAccount.js';
@@ -15,46 +15,27 @@ import { Transactions } from './components/Transactions.js';
 import { AllData } from './components/AllData.js';
 import { Login } from './components/Login.js';
 import { Footer } from './components/Footer.js';
-import { Welcome } from './components/Welcome.js';
-import { AuthProvider } from './auth/authContext.js';
-
-
+//import { setAuthToken } from './auth/authHeader.js';
+// import { AuthProvider } from './auth/authContext.js';
+import 'react-toastify/dist/ReactToastify.min.css';
+import { AuthProvider, useAuth } from './context/AuthContext.js';
+//import { RequireAuth } from './auth/RequireAuth.js';
 function App() {
- 
-// const [ userData, setUserData] = useState({
-// token: undefined,
-// user: undefined
-// });
-// useEffect(() => {
-// const checkLoggedIn = async () => {
-// let token = localStorage.getItem("Authorization");
-// if(token === null){
-// localStorage.setItem("Authorization", "x-access-token ");
-// token = "";
-// }
-// const tokenResponse = await axios.post('http://localhost:8080/api/auth/tokenIsValid', null, {headers: {"Authorization": token}});
-// if (tokenResponse.data) {
-// const userRes = await axios.get("http://localhost:8080/api/auth", {
-// headers: { "Authorization":  'x-access-token', token },
-// });
-//   console.log(userData);
-// setUserData({
-// token,
-// user: userRes.data,
-// });
-// }
-// }
-// checkLoggedIn();
-// }, [userData]);
+//check jwt token
+//  const token = localStorage.getItem("token");
+//  if (token) {
+//      setAuthToken(token);
+//  }
 
-
-
+  // const { user } = useAuth();
   return (
-
+    <GoogleOAuthProvider clientId='412711755874-47is1si61kd9v8srifbh1akbltdaqo52.apps.googleusercontent.com'>
+<AuthProvider>
     <BrowserRouter>
-      <AuthProvider>
      
-    <div className="container-fluid">
+     
+          <div className="container-fluid">
+            <div className='app-user'>Currently logged in: </div>
  <NavBar />
 
     <Routes>
@@ -62,36 +43,34 @@ function App() {
           
             <Route path="/login" element={<Login />} />  
             
-     <Route path="/welcome" element={ <Welcome/>}/>             
+              
    
   <Route path="/register" element={ <CreateAccount/>}/>
-       <Route element={<PrivateRoute />}>
+       
            <Route exact path="/deposit" element={<Deposit />} />
-         </Route>             
+                  
  
-         <Route element={<PrivateRoute />}>
            <Route exact path="/withdraw" element={<Withdraw/> } />
-         </Route>              
+                  
 
-        <Route element={<PrivateRoute />}>
+       
          <Route exact path="/dashboard" element={<Dashboard/>} />
-         </Route>
+         
                       
-      <Route element={<PrivateRoute />}>
+    
          <Route exact path="/transactions" element={<Transactions/>}/>
-         </Route>
-
-       <Route element={<PrivateRoute />}>
+        
          <Route exact path="/allData" element= {<AllData/>}/>
-         </Route>                
+                   
           </Routes>
          
       </div>
         <Footer />
        
-        </AuthProvider>
+       
       </BrowserRouter>
-    
+      </AuthProvider>
+      </GoogleOAuthProvider>
   );
 }
 

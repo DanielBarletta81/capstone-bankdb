@@ -1,101 +1,103 @@
 import React, {useState} from 'react'
-import { Button, Card, Form } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-
-
-
+import { Button, Card, Form, Container, Alert, FormGroup, FormLabel, FormControl } from 'react-bootstrap';
+import { NavLink } from 'react-router-dom';
+import { toast } from "react-toastify";
+import { useAuth } from '../context/AuthContext.js';
+import axios from "../api/axios.js";
+import depositPic from "./coinPlant.jpg"
+import "./deposit.css";
 
 
 export const Deposit = () => {
+  const { currentUser } = useAuth();
+
+  const [depositAmount, setDepositAmount] = useState(0);
+
+  const [account_Nums, setAccount_Nums] = useState(0);
+  const [balance, setBalance] = useState(100);
+  const [error, setError] = useState('');
+   const [loading, setLoading] = useState(false);
 
 
-
-  return (<>
-    <Card className='acct-card'>
-       <Card.Header> Make a Deposit</Card.Header>
-        <FormDeposit/>
-    </Card>
-    </>
-    )
   
+    const onDeposit = async (e) => {
+      e.preventDefault();
+
+  
+      try {
+       
+
+        if (!depositAmount || depositAmount <= 0) {
+          setError("Please enter valid deposit amount");
+        }
+  await axios.patch('http://localhost:8080/api/deposit', {
+          body: JSON.stringify({
+            depositAmount: depositAmount,
+           balance: balance,
+            account_Nums: account_Nums
+          }),
+          headers: {
+           
+            'Content-type': 'application/json',
+          },
+        })
+          .then(response => {
+            setBalance(response.data.balance);
+          })
+
+          setDepositAmount('');
+          setAccount_Nums('');
+          setBalance('');
+          setError('');
+          setLoading(false);
+          toast(`Success! You have deposited ${depositAmount} into Account #: ${account_Nums}.`);
+        
+} catch (error) {
+  console.log(error.message);
 }
 
-function FormDeposit() {
+
+    };
+
+  return (
+
+    <>
+  <Container className="d-flex align-items-center justify-content-center">
+        <Card className="depCard">
+          <Card.Img src={depositPic}></Card.Img>
+        {/* <Card.Header className="cardhead">Make a Deposit</Card.Header> */}
+        {/* { currentUser.email} */}
+        {error && <Alert variant="danger">{error }</Alert>}   
+          <Card.Header className="user">Logged in as: -- {currentUser.email }</Card.Header>
+          <Form>
+            <FormGroup>
+              <FormLabel className="balance">Current Balance: $ {balance} </FormLabel>
+            
+            </FormGroup>
+
+
+            <FormGroup>
+              <FormLabel className= "amt" >Deposit Amount</FormLabel>
+                <FormControl onChange={((e) => setDepositAmount(e.target.value))} value={depositAmount}
+              type="number" className="event" aria-label="Amount" />
+            </FormGroup>
+
+             <FormGroup>
+              <FormLabel className= "acct" >Account Number</FormLabel>
+                <FormControl onChange={((e) => setAccount_Nums(e.target.value))} 
+                value={account_Nums} type="number" className="event"  />
+            </FormGroup>
+      
+ <Button className="deposit" disabled={loading} onClick={onDeposit} value={depositAmount} type="submit" >Deposit</Button>
+      
+ </Form>
+          
   
-  const [amounts, setAmounts] = useState(0);
-  const [deposit, setDeposit] = useState(0);
-  const [withdraw, setWithdraw] = useState(0);
-  const [balance, setBalance] = useState(100);
+     <NavLink to="/withdraw" className="deposit-link">Click to make a withdrawal</NavLink>
+       
+            </Card>
+              </Container>
+    </>
+    )
 
-
-  const onDeposit = (e) => {
-    e.preventDefault();
-    fetch('http://localhost:8080/account/deposit/:id/:account_Nums', {
-      method: 'PUT',
-      body: JSON.stringify({
-        deposit: deposit,
-        withdraw: withdraw,
-        amounts: amounts,
-      }),
-      headers: {
-        'Accept': 'application/json',
-        'Content-type': 'application/json',
-      },
-    })
-      .then((res) => res.json())
-      .then(() => {
-        setDeposit('');
-        setWithdraw('');
-        setAmounts('');
-        alert(`Success! You have deposited ${amounts}.`)
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-  };
-
-
- 
-  if (!amounts || amounts <= 0) {
-    return alert('Invalid deposit amount');
-  } else {
-    let balanceNew = (Number(balance + amounts))
-    setBalance(balanceNew)
   }
-  
-
-  return (<>
-    <Card style={{ display: "grid", textAlign: 'center' }}>
-      <Form>
-        <>
-          <h5 className="card-balance mb-4" type="number" id="update-balance"
-            style={{ textAlign: 'center' }}>Current Balance = $ {balance} </h5>
-
-          <h5 className="card-title mb-5" style={{ backgroundColor: 'limegreen' }}>Make a Deeposit</h5>
-
-
-          <div>
-            <h5 className='me-auto mb-3'>Deposit Amount</h5>
-
-            <span className="input-withdraw" style={{ height: 40, width: 100, textAlign: 'center' }}>$</span>
-
-            <input onChange={((e) => setAmounts(e.target.value))} value={amounts} style={{ height: 30, width: 225 }}
-              id="amount" type="number" className="event" aria-label="Amount" placeholder="Enter Deposit Amount" />
-          </div>
-
-          <Button disabled={!amounts} onClick={onDeposit} value={amounts} type="submit" >Deposit</Button>
-        </>
-      </Form>
-      <Card.Footer>Click the link below to make a withdrawal
-        <Link style={{ display: 'flex', position: "flex-bottom" }} to="/withdraw" className="deposit-link"><Button>Withdraw</Button></Link>
-      </Card.Footer>
-    </Card>
-     
-  </>
-  )
-
-}   
-export default Deposit;
-
-
-

@@ -1,60 +1,68 @@
-import React, {useState} from 'react'
-import { Button, Card, Form } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-
+import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext.js';
+import { Button, Card, Form, Container, Alert, FormGroup, FormLabel, FormControl } from 'react-bootstrap';
+import { NavLink } from 'react-router-dom';
+import  cardTop  from './withdrawCard.jpg';
 
 export function Withdraw() {
   
-  const [amounts, setAmounts] = useState({
-    deposit: 0,
-    withdraw: 0
-  });
+  const [withdrawAmount, setWithdrawAmount] = useState(0);
   const [balance, setBalance] = useState(100);
+  const [loading, setLoading] = useState(false);
+  const [account_Nums, setAccount_Nums] = useState('');
+  const [error, setError] = useState(false);
 
+  const { currentUser } = useAuth();
 
-  const onChangeBalance = (e) => {
+  const onWithdraw = (e) => {
     e.preventDefault()
- let amounts = Number(e.target.value);
 
-
-
-    if (amounts >= balance || balance <= 0) {
-      return alert('Insufficient funds');
-    } else if (amounts <= balance) {
-      let balanceNew = (Number(balance - amounts))
-      setBalance(balanceNew)
-    }else if (!amounts || amounts === isNaN){
-      return alert('Error, please enter a valid withdrawal Amount!');
-    }
   }
 
-    return (
-      <Card style={{ display: "grid", textAlign: 'center' }}>
-        <Form>
-          <>
-            <h5  className="card-balance mb-4" type="number" id="update-balance" 
-              style={{ textAlign: 'center' }}>Current Balance = $ {balance} </h5>
+  return (
+      
+  <>
+  <Container className="d-flex align-items-center justify-content-center">
+        <Card className="depCard">
+          <Card.Img src={cardTop}></Card.Img>
+        {/* <Card.Header className="cardhead">Make a Deposit</Card.Header> */}
+        {/* { currentUser.email} */}
+        {error && <Alert variant="danger">{error }</Alert>}   
+          <Card.Header className="user">Logged in as: {currentUser.email }</Card.Header>
+          <Form>
+            <FormGroup>
+              <FormLabel className="balance">Current Balance: $ {balance} </FormLabel>
+            
+            </FormGroup>
 
-            <h5 className="card-title mb-5" style={{ backgroundColor: 'limegreen' }}>Make a Withdrawal</h5>
 
+            <FormGroup>
+              <FormLabel className= "amt" >Deposit Amount</FormLabel>
+                <FormControl onChange={((e) => setWithdrawAmount(e.target.value))} value={withdrawAmount}
+              type="number" className="event" aria-label="Amount" />
+            </FormGroup>
 
-            <div>
-              <h5 className='me-auto mb-3'>Withdraw Amount</h5>
+             <FormGroup>
+              <FormLabel className= "acct" >Account Number</FormLabel>
+                <FormControl onChange={((e) => setAccount_Nums(e.target.value))} 
+                value={account_Nums} type="number" className="event"  />
+            </FormGroup>
+      
+ <Button className="withdraw" disabled={loading} onClick={onWithdraw} value={withdrawAmount} type="submit" >Withdraw</Button>
+      
+ </Form>
+          
+  
+     <NavLink to="/deposit" className="mb-4">Click to make a withdrawal</NavLink>
+       
+            </Card>
+              </Container>
+    </>
+    )
 
-              <span className="input-withdraw" style={{ height: 40, width: 100, textAlign: 'center' }}>$</span>
-
-              <input onChange={((e) => setAmounts(e.target.value))} value={amounts} style={{ height: 30, width: 225}}
-                id="amount" type="number" className="event" aria-label="Amount" placeholder="Enter Withdraw Amount" />
-            </div>
-
-     <Button disabled={!amounts} onClick={onChangeBalance} value={amounts} type="submit" >Withdraw</Button>
-          </>
-        </Form>
-        <Card.Footer>
-          <Card.Text>Click the link below to make a deposit</Card.Text>
-          <Link style={{ display: 'flex', position: "flex-bottom" }} to="/deposit" className="deposit-link"><Button>Deposit</Button></Link>
-        </Card.Footer>
-      </Card>)
+     
+        
+       
   }
     
 export default Withdraw;

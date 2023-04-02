@@ -1,145 +1,111 @@
+
+
 const dotenv = require ('dotenv');
 dotenv.config();
 const mongoose = require ('mongoose');
 const express = require('express');
-
 const path = require('path');
+const bcrypt = require('bcrypt');
 const cors = require ('cors');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
 
-
-//const uuid = require('uuid');
-//const session = require('express-session');
+const session = require('express-session');
 const connectDB = require ('./src/db/dbConn.js');
-//const sessionOptions = require('./src/middleware/sessions');
-// get authentication router from authenticate.js
+//const db = require('./src/model/dbModel');
+const { User } = require('./src/model/user');
 
-// require('firebase/auth');
-
-// const decodeIDToken = require('./src/middleware/fireb_admin');
-
+const userRoutes = require('./src/routes/userRoutes.js');
 
 //connect MongoDB
 connectDB();
 
 var app = express();
+//https://cloud.mongodb.com/v2/63a14080cf3f305459004a73#/metrics/replicaSet/63d2e15013b7bf581fcac512/explorer/GoodBank/users/find
+
 
 var port = process.env.PORT;
+//cors
 
-// app.use(decodeIDToken);
-
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-// const firebaseConfig = {
-//   apiKey: "process.env.FIREBASE_API",
-//   authDomain: "process.env.FIREBASE_AUTH_DOMAIN",
-//     projectId: "process.env.FIREBASE_PROJ_ID",
-//   storageBucket: "process.env.FIREBASE_STOR_BUCKET",
-//   messagingSenderId: "process.env.FIREBASE_MESS_SEND_ID",
-//   appId: "process.env.FIREBASE_APP_ID",
+const corsOptions ={
+    origin:'http://localhost:3000', 
+    credentials:true,            
+    optionSuccessStatus:200
+}
+app.use(cors(corsOptions));
  
-// };
-
-// Initialize Firebase
-
-
+app.use(cookieParser());
+// app.use(methodOverride('_method'));
 //bodyParser
+app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
-// var axios = require('axios');
-// var data = JSON.stringify({
-//     "collection": "users",
-//     "database": "GoodBank",
-//     "dataSource": "Bank-CapStone",
-//     "projection": {
-//         "_id": 1
-//     }
-// });
-            
-
-
-
 app.use(express.static(path.join(__dirname, 'public')));
-// app.use(express.static('public'));
-
-// cors
-app.use(cors());
-
-//bodyParser
 
 
-// middleware
+//routes
+//login
+app.use('/api', userRoutes);
+
+app.get('/dashboard', (req, res) => {
+  res.send({ username: req.user.username });
+});
 
 
 
-//app.use(session(sessionOptions));
-// app.use(session({
-//   genid: (req) => {
-   
-//     console.log(req.sessionID)
-//     return uuid.v4() // use UUIDs for session IDs
-//   },
-//   secret: process.env.SECRET,
-//   saveUninitialized: true
-// }))
 
+// app.get('/auth/userData', authenticateToken, async (req, res) => {
+//   const username = req.body.username;
+//   const user = await User.findOne({"username": username})
+//   res.json(user)
+// })
 
-// api routes
-app.use('/api', require('./src/routes/userRoutes.js'));
-
-// auth routes
-// app.use('/auth', require('./src/routes/fireAuthRoutes'));
 
 //only listen if connected to DB
 mongoose.connection.once('open', () => {
     console.log('Actually connected to MongoDB');
 
-function initial() {
-  Role.estimatedDocumentCount((err, count) => {
-    if (!err && count === 0) {
-      new Role({
-        name: "user"
-      }).save(err => {
-        if (err) {
-          console.log("error", err);
-        }
+// function initial() {
+//   Role.estimatedDocumentCount((err, count) => {
+//     if (!err && count === 0) {
+//       new Role({
+//         name: "user"
+//       }).save(err => {
+//         if (err) {
+//           console.log("error", err);
+//         }
 
-        console.log("added 'user' to roles collection");
-      });
+//         console.log("added 'user' to roles collection");
+//       });
 
-      new Role({
-        name: "employee"
-      }).save(err => {
-        if (err) {
-          console.log("error", err);
-        }
+//       new Role({
+//         name: "employee"
+//       }).save(err => {
+//         if (err) {
+//           console.log("error", err);
+//         }
 
-        console.log("added 'employee' to roles collection");
-      });
+//         console.log("added 'employee' to roles collection");
+//       });
 
-      new Role({
-        name: "bigboss"
-      }).save(err => {
-        if (err) {
-          console.log("error", err);
-        }
+//       new Role({
+//         name: "bigboss"
+//       }).save(err => {
+//         if (err) {
+//           console.log("error", err);
+//         }
 
-        console.log("added 'bigboss' to roles collection");
-      });
-    }
-  });
-}
-
-
-
-
-
+//         console.log("added 'bigboss' to roles collection");
+//       });
+//     }
+//   });
+// }
 
     // listen
     app.listen(port, () =>
         console.log(`Server running on port: ${port}`));
 })
+
+module.exports = app;

@@ -1,0 +1,82 @@
+img.card-img{
+    max-width: 600px;
+    max-height: 400px;
+}
+
+div{
+    margin: auto;
+    padding: 10;
+}
+
+
+form{
+    padding: 100px;
+    margin-bottom: 40;
+}
+
+div.cardhead.card-header{
+    background-color: rgb(85, 195, 228);
+    margin-bottom: 30px;
+    border-style: groove;
+    border-color: black;
+}
+div.user.card-header {
+    background-color: rgb(85, 195, 228);
+    border-style: groove;
+    border-color: black;
+}
+
+label.balance.form-label{
+    display: flex;
+    font-display: auto;
+    border-style: double;
+    border-width: 15px;
+    margin-bottom: 100px;
+    background-color: rgb(96, 233, 243);
+    height: 75px;
+    width: 400px;
+    align-items: center;
+    justify-content: center;
+    font-family: fantasy;
+    font: 30px solid black
+}
+label.amt.form-label {
+    display: flex;
+    font-display: auto;
+    margin-bottom: 10px;
+    background-color: rgb(129, 203, 243);
+   border-width: 5px;
+   border-style: double;
+    align-items: center;
+    justify-content: center;
+    font-family: fantasy;
+    font: 24px solid black
+}
+label.acct.form-label {
+    display: flex;
+    font-display: auto;
+    margin-bottom: 10px;
+    scroll-margin-top: 10px;
+    background-color: rgb(129, 203, 243);
+    border-width: 5px;
+    border-style: double;
+    align-items: center;
+    justify-content: center;
+    font-family: fantasy;
+    font: 24px solid black
+}
+div.depCard.card{
+    justify-self: center;
+    margin: 50px;
+    margin-bottom: 100px;
+}
+input.event.form-control{
+    margin-bottom: 50px;
+}
+a.deposit-link{
+    justify-self: center;
+}
+button.btn.btn-deposit{
+align-self: center;
+
+}
