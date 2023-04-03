@@ -17,7 +17,7 @@ const connectDB = require ('./src/db/dbConn.js');
 const { User } = require('./src/model/user');
 
 const userRoutes = require('./src/routes/userRoutes.js');
-
+// const decodeIDToken = require('./src/middleware/authMid');
 //connect MongoDB
 connectDB();
 
@@ -34,7 +34,7 @@ const corsOptions ={
     optionSuccessStatus:200
 }
 app.use(cors(corsOptions));
- 
+// app.use(decodeIDToken);
 app.use(cookieParser());
 // app.use(methodOverride('_method'));
 //bodyParser

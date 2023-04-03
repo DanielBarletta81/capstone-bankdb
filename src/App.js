@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import {  BrowserRouter, Route, Routes} from 'react-router-dom';
 
@@ -18,16 +18,12 @@ import { Footer } from './components/Footer.js';
 //import { setAuthToken } from './auth/authHeader.js';
 // import { AuthProvider } from './auth/authContext.js';
 import 'react-toastify/dist/ReactToastify.min.css';
-import { AuthProvider, useAuth } from './context/AuthContext.js';
-//import { RequireAuth } from './auth/RequireAuth.js';
-function App() {
-//check jwt token
-//  const token = localStorage.getItem("token");
-//  if (token) {
-//      setAuthToken(token);
-//  }
+import { AuthProvider } from './context/AuthContext.js';
 
-  // const { user } = useAuth();
+
+function App() {
+
+  
   return (
     <GoogleOAuthProvider clientId='412711755874-47is1si61kd9v8srifbh1akbltdaqo52.apps.googleusercontent.com'>
 <AuthProvider>
@@ -70,7 +66,7 @@ function App() {
        
       </BrowserRouter>
       </AuthProvider>
-      </GoogleOAuthProvider>
+       </GoogleOAuthProvider>
   );
 }
 

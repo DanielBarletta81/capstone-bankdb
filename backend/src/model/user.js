@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { isEmail } = require('validator');
-const bcrypt = require('bcrypt');
+
 
 const UserSchema = new mongoose.Schema({
     username: {
@@ -34,12 +34,16 @@ validate: [isEmail, 'Please enter a valid email'],
     timestamps: true
     });
 
-//  before doc saved to db
-UserSchema.pre('save', async function(next) {
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
-  next();
-});
+// get 
+// UserSchema.set('toJSON', {
+//   transform: (doc, returnedObject) => {
+//     returnedObject.id = returnedObject._id.toString();
+//     console.log(doc);
+//     delete returnedObject._id;
+//     delete returnedObject.__v;
+//   },
+// });
+
 
  const User = mongoose.model('User', UserSchema);
  module.exports = { User };

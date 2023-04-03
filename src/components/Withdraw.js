@@ -12,7 +12,7 @@ export function Withdraw() {
   const [account_Nums, setAccount_Nums] = useState('');
   const [error, setError] = useState(false);
 
-  const { currentUser } = useAuth();
+  const { user } = useAuth();
 
   const onWithdraw = (e) => {
     e.preventDefault()
@@ -28,7 +28,7 @@ export function Withdraw() {
         {/* <Card.Header className="cardhead">Make a Deposit</Card.Header> */}
         {/* { currentUser.email} */}
         {error && <Alert variant="danger">{error }</Alert>}   
-          <Card.Header className="user">Logged in as: {currentUser.email }</Card.Header>
+          <Card.Header className="user">Logged in as: {user.email }</Card.Header>
           <Form>
             <FormGroup>
               <FormLabel className="balance">Current Balance: $ {balance} </FormLabel>
@@ -53,7 +53,7 @@ export function Withdraw() {
  </Form>
           
   
-     <NavLink to="/deposit" className="mb-4">Click to make a withdrawal</NavLink>
+     <NavLink to="/deposit" className="mb-4">Click here to deposit</NavLink>
        
             </Card>
               </Container>

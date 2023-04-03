@@ -1,13 +1,13 @@
 const express = require('express');
 const { ObjectId } = require('mongodb');
 const router = express.Router();
-const { userLogin, handleReg, verToken, getAllData, getOneUser, getUserByID } = require('../controllers/authController.js');
+const { userLogin, handleReg, getAllData, getOneUser, getUserByID, sendUserToDB } = require('../controllers/authController.js');
 const { getBalance, makeDeposit } = require('../controllers/transactionsCont.js');
 // const authMiddleware = require('../middleware/authMid.js');
 const { User } = require('../model/user');
 
 
-router.post('/signup', handleReg);
+router.post('/signup', handleReg, sendUserToDB);
 
 router.post('/login', userLogin); 
 

@@ -1,58 +1,32 @@
-import { useRef, useState } from 'react';
+import {  useState } from 'react';
 import { Form, Button, Card, Alert, Container } from 'react-bootstrap';
 import './login.css';
-import {  NavLink, useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword , GoogleAuthProvider, signInWithPopup, getAuth} from 'firebase/auth';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { login } from '../firebase.js';
+import { useAuth } from '../context/AuthContext.js';
 import { toast } from 'react-toastify';
-
-import { auth } from '../firebase.js';
-
 
 export const Login = () => {
  
   const navigate = useNavigate();
 
+const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState('');
-  const emailRef = useRef();
-  const passwordRef = useRef();
 
-  
-   
-  function googleLogin() {
-    const auth = getAuth();
-    const provider = new GoogleAuthProvider(auth);
-    // create popup signIn
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        console.log(result);
-     const credential  = GoogleAuthProvider.credentialFromResult(result);
-        // store  token
-        const token = credential.accessToken;
-        // - check  if current user has token
-        const user = result.user;
-        console.log(user);
-        if (token) {
-          // - put token in localStorage )
-          localStorage.setItem("@token", token);
-          // - navigate user to dash
-          navigate("/dashboard");
-  }
- })
-      .catch((error) => {
-        console.log(error);
-      })
-    
-}
-const handleLogin = (e) => {
+  const { user } = useAuth();
+ 
+const handleLogin = async (e) => {
     e.preventDefault();
-
-
-    signInWithEmailAndPassword(auth,emailRef.current.value, passwordRef.current.value)
-
-   toast(`Success! User Logged in:'` );
+try {
+   await login();
+  toast(`Success! User Logged in: ${user.email}'`);
+  
+} catch (error) {
+   setError(error);
+}
      navigate('/dashboard');
-  setError(error);
     setLoading(false);
 }
 
@@ -88,7 +62,7 @@ const handleLogin = (e) => {
                   <Form.Label htmlFor="email">E-Mail</Form.Label>
                   <Form.Control
                 type="email"
-                ref= {emailRef}
+                onChange={(e) => setLoginEmail(e.target.value)}
               
               
 								
@@ -105,14 +79,14 @@ const handleLogin = (e) => {
               <Form.Label >Password</Form.Label>
               <Form.Control
                 type="password"
-                ref = {passwordRef}
+               onChange={(e) => setLoginPassword(e.target.value)}
                 id="password"
                 placeholder="Password"
                   />
                 </Form.Group>
 
             <Button disabled={loading} onClick={handleLogin}> Login </Button>
-     <Button onClick={googleLogin}>Login with Google</Button>
+     <Button >Login with Google</Button>
                 No account yet? {' '}
                 <NavLink to="/register"> Sign up</NavLink>
               </Form>

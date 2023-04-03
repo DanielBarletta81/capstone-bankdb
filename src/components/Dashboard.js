@@ -8,7 +8,7 @@ import DashSideBar from './dashSideBar.js';
 
 import mountain from './Mountain_Profile.jpg';
 import './dashb.css';
-import { auth } from '../firebase.js';
+import { auth, logout} from '../firebase.js';
 import { toast } from 'react-toastify';
 
 
@@ -16,7 +16,7 @@ import { toast } from 'react-toastify';
 export function Dashboard() {
   const [error, setError] = useState('');
 
-  const { currentUser } = useAuth();
+  const { user } = useAuth();
   
   const navigate = useNavigate();
   
@@ -43,8 +43,8 @@ export function Dashboard() {
     setError('');
 
     try {
-      await signOut(auth, currentUser)
-      toast(`${currentUser.email} now logged out!`)
+      await logout(auth);
+      toast(`${user.email} now logged out!`)
        navigate('/login')
     } catch (error) {
       setError('Failed to log out!')
@@ -64,7 +64,7 @@ export function Dashboard() {
            <Card.Img src={mountain}></Card.Img>
         
           <Card.Body>
-            <strong>User:</strong>{currentUser.email}
+            <strong>User:</strong>{user.email}
          
           {error && <Alert variant="danger">{error}</Alert>}
         

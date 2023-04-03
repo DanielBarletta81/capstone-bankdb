@@ -8,17 +8,17 @@ import axios from '../api/axios.js';
 
 
 export function Transactions() {
-  const { currentUser } = useAuth();
+  const { user } = useAuth();
 
   const getUserBalance = async () => {
   try {
-    let userBalance = await axios.get('/users/balance/:userId')
+    let userBalance = await axios.ge('/users/balance/:userId')
       .then(data => console.log(data.data));
     console.log(userBalance);
   } catch (error) {
     console.log(error);
   }
-    getUserBalance();
+ 
 }
 
 
@@ -29,7 +29,7 @@ export function Transactions() {
  <Card className= "d-flex">
       <Card.Img variant="top" src="holder.js/100px180" />
       <Card.Body>
-          <Card.Title>Recent Transactions for:{currentUser}  </Card.Title>
+          <Card.Title>Recent Transactions for:{user.email}  </Card.Title>
         <Card.Text>
          Transactions go here....
         </Card.Text>

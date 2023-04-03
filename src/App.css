@@ -26,9 +26,9 @@ div.container-fluid{
 
 }
 div.app-user{
-  background-color: white;
-position: absolute;
-display: end;
+  background-color: rgb(188, 177, 177);
+justify-content: end;
+
 font: white;
 }
 

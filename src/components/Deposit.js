@@ -9,7 +9,7 @@ import "./deposit.css";
 
 
 export const Deposit = () => {
-  const { currentUser } = useAuth();
+  const { user } = useAuth();
 
   const [depositAmount, setDepositAmount] = useState(0);
 
@@ -68,7 +68,7 @@ export const Deposit = () => {
         {/* <Card.Header className="cardhead">Make a Deposit</Card.Header> */}
         {/* { currentUser.email} */}
         {error && <Alert variant="danger">{error }</Alert>}   
-          <Card.Header className="user">Logged in as: -- {currentUser.email }</Card.Header>
+          <Card.Header className="user">Logged in as: -- {user.email }</Card.Header>
           <Form>
             <FormGroup>
               <FormLabel className="balance">Current Balance: $ {balance} </FormLabel>

@@ -1,6 +1,7 @@
-import {  useState } from "react";
+import {  useRef, useState } from "react";
+
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from '../firebase.js';
+import { auth }  from '../firebase.js';
 import { useNavigate } from "react-router-dom";
 import { Container,Form, Button, Row, Col, Card , Alert} from "react-bootstrap";
 //import { Notify } from "../Toasts/notify.js";
@@ -10,6 +11,9 @@ import axios from "axios";
 
 import "./createAcct.css";
 import { toast } from "react-toastify";
+import { useAuth } from "../context/AuthContext.js";
+
+
 
 
 
@@ -21,56 +25,31 @@ export const CreateAccount = () => {
   
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [pwdCheck, setPwdCheck] = useState('');
-  //register validation
+  const [regEmail, setRegEmail] = useState('');
+  const [regPassword, setRegPassword] = useState('');
+  const [regUsername, setRegUsername] = useState('');
+  const [confirmPW, setConfirmPW] = useState('');
 
-  const validPw = () => {
-    let isValid = true;
-    if (password.current.value !== pwdCheck.current.value) {
-      isValid = false;
-      setError('Passwords do not match!')
-    }
-    return isValid;
-  }
+  const { user } = useAuth();
+  
 
-  const submitNewUser = async (e) => {
+
+   
+  const register = async (e) => {
     e.preventDefault();
-
-    setError('');
-
-    if (validPw()) {
-      createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          console.log(user);
-          navigate("/login");
-        })
-        .catch((error) => {
-          setError(error.message);
-        });
-    }
-  }
-
-  const signupData = () => {
-    try {
-      let data;
-      let user;
-       axios.post('http://localhost:8080/api/signup', data)
-        .then(res => res.data)
-      toast(`Success! Created User: ${user.email}`);
-   navigate('/dashboard');
-
-      setLoading(false);
-      
-    } catch (error) {
-      setError(error);
-      console.log(error);
-    }
-
-
+  try {
+     await
+      createUserWithEmailAndPassword(auth, regEmail, regPassword)
+   
+    console.log( user);
+    toast(`Success! Created User: ${user.email}`);
+  
+    setLoading(false);
+  } catch(err) {
+    console.log(err.message);
+     setError(err);
+    };
+      navigate('/dashboard');
 }
 
 
@@ -87,6 +66,15 @@ export const CreateAccount = () => {
   // }
 
   //  function CreateAcctForm() {
+// hash_config {
+//   algorithm: SCRYPT,
+//   base64_signer_key: CrEYr9w9C9cqU/+DgpepsvhDQRp/zQ3p4UA4r3/0mLtNcTJQ6AMov0wCUzIFnDPmvXtg00/QifSRVraEVCcS8A==,
+//   base64_salt_separator: Bw==,
+//   rounds: 8,
+//   mem_cost: 14,
+// }
+
+
 
   return (
     //</> <Notify type= "success"/>
@@ -94,17 +82,17 @@ export const CreateAccount = () => {
       <Card> 
      <Card.Header className="text-center mb-6"> Register Here!</Card.Header>
       
-        {error && <Alert variant="danger">{error }</Alert>}    
+        {/* {error && <Alert variant="danger">{error }</Alert>}     */}
     
        
-    <Form onSubmit={submitNewUser}>
+    <Form >
       <Row className="mb-3">
         <Form.Group as={Col} md="28" id="username">
         <Form.Label >Enter a Username:</Form.Label>
         <Form.Control
-                onChange={(e) => setUsername(e.target.value)}
+            
             type="text"
-         
+         onChange={(e)=> setRegUsername(e.target.value)}
           placeholder="Username"
          
         />
@@ -116,8 +104,9 @@ export const CreateAccount = () => {
         <Form.Group  md="4" >
         <Form.Label> Enter an E-mail:</Form.Label>
         <Form.Control
-            type= "email"
-           onChange={(e) => setEmail(e.target.value)} 
+                type="email"
+              onChange={(e)=> setRegEmail(e.target.value)}
+                
           placeholder="E-mail address"
           autoComplete= "off"
         />
@@ -130,9 +119,9 @@ export const CreateAccount = () => {
           <Form.Label  >Create Password:
           </Form.Label>
           <Form.Control
-           onChange={(e) => setPassword(e.target.value)}
-            type="password"
             
+            type="password"
+         onChange={(e)=> setRegPassword(e.target.value)}
             placeholder="Password"
           
            autoComplete= "off"
@@ -150,7 +139,7 @@ export const CreateAccount = () => {
         <Form.Label>Confirm Password</Form.Label>
         <Form.Control
         type="password"
-           onChange={(e) => setPwdCheck(e.target.value)}
+       onChange={(e)=> setConfirmPW(e.target.value)}
           placeholder="Confirm Password"
          autoComplete= "off"
         />
@@ -160,7 +149,7 @@ export const CreateAccount = () => {
      <br/>
        
                                               
-      <Button disabled={loading} type="submit" onClick={signupData}>
+          <Button disabled={loading} onClick={register} type="submit" >
         Create Account
       </Button>
      
