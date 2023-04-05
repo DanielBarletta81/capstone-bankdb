@@ -36,7 +36,7 @@ export function Withdraw() {
 
 
             <FormGroup>
-              <FormLabel className= "amt" >Deposit Amount</FormLabel>
+              <FormLabel className= "amt" >Withdrawal Amount</FormLabel>
                 <FormControl onChange={((e) => setWithdrawAmount(e.target.value))} value={withdrawAmount}
               type="number" className="event" aria-label="Amount" />
             </FormGroup>
