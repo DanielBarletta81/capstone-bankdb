@@ -14,7 +14,7 @@ export const Deposit = () => {
   const [depositAmount, setDepositAmount] = useState(0);
 
   const [accountNumber, setAccountNumber] = useState(0);
-  const [balance, setBalance] = useState(100);
+  const [accountBalance, setAccountBalance] = useState(100);
   const [error, setError] = useState('');
    const [loading, setLoading] = useState(false);
 
@@ -42,7 +42,7 @@ export const Deposit = () => {
           },
         })
           .then(response => {
-            setBalance(response.data.accountBalance);
+            setAccountBalance(response.data.accountBalance);
           })
 
           setDepositAmount('');
@@ -56,9 +56,23 @@ export const Deposit = () => {
   console.log(error.message);
 }
 
+};
 
-    };
+  const showBalance = async () => {
+    try {
+      await axios.get('http://localhost:8080/api/deposit')
+        .then(data => {
+          setAccountBalance(data.data.accountBalance);
+        });
+    } catch (error) {
+      console.log(error)
+    }
+    showBalance();
+  }
 
+
+  
+  
   return (
 
     <>
@@ -72,7 +86,7 @@ export const Deposit = () => {
           <Card.Header className="user">Logged in as: -- {user.email }</Card.Header>
           <Form>
             <FormGroup>
-              <FormLabel className="balance">Current Balance: $ {user.balance} </FormLabel>
+              <FormLabel className="balance">Current Balance: $ {showBalance} </FormLabel>
             
             </FormGroup>
 
