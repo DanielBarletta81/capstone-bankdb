@@ -13,7 +13,7 @@ export const Deposit = () => {
 
   const [depositAmount, setDepositAmount] = useState(0);
 
-  const [account_Nums, setAccount_Nums] = useState(0);
+  const [accountNumber, setAccountNumber] = useState(0);
   const [balance, setBalance] = useState(100);
   const [error, setError] = useState('');
    const [loading, setLoading] = useState(false);
@@ -33,8 +33,8 @@ export const Deposit = () => {
   await axios.patch('http://localhost:8080/api/deposit', {
           body: JSON.stringify({
             depositAmount: depositAmount,
-           balance: balance + depositAmount,
-            account_Nums: account_Nums
+           accountBalance: accountBalance + depositAmount,
+            accountNumber: accountNumber
           }),
           headers: {
            
@@ -42,15 +42,15 @@ export const Deposit = () => {
           },
         })
           .then(response => {
-            setBalance(response.data.balance);
+            setBalance(response.data.accountBalance);
           })
 
           setDepositAmount('');
-          setAccount_Nums('');
-          setBalance('');
+          setAccountNumber('');
+          setAccountBalance('');
           setError('');
           setLoading(false);
-          toast(`Success! You have deposited ${depositAmount} into Account #: ${account_Nums}.`);
+          toast(`Success! You have deposited \$ ${depositAmount} into Account #: ${accountNumber}.`);
         
 } catch (error) {
   console.log(error.message);
@@ -85,8 +85,8 @@ export const Deposit = () => {
 
              <FormGroup>
               <FormLabel className= "acct" >Account Number</FormLabel>
-                <FormControl onChange={((e) => setAccount_Nums(e.target.value))} 
-                value={account_Nums} type="number" className="event"  />
+                <FormControl onChange={((e) => setAccountNumber(e.target.value))} 
+                value={accountNumber} type="number" className="event"  />
             </FormGroup>
       
  <Button className="deposit" disabled={loading} onClick={onDeposit} value={depositAmount} type="submit" >Deposit</Button>

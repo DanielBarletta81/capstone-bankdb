@@ -9,15 +9,44 @@ export function Withdraw() {
   const [withdrawAmount, setWithdrawAmount] = useState(0);
   const [balance, setBalance] = useState(100);
   const [loading, setLoading] = useState(false);
-  const [account_Nums, setAccount_Nums] = useState('');
+  const [accountNumber, setAccountNumber] = useState('');
   const [error, setError] = useState(false);
 
   const { user } = useAuth();
 
-  const onWithdraw = (e) => {
-    e.preventDefault()
+  const onWithdraw = async (e) => {
+    e.preventDefault();
 
-  }
+      try {
+        if (!withdrawAmount || withdrawAmount <= 0) {
+          setError("Please enter valid withdrawal amount");
+        }
+  await axios.patch('http://localhost:8080/api/withdraw', {
+          body: JSON.stringify({
+            withdrawAmount: withdrawAmount,
+           accountBalance: accountBalance + withdrawAmount,
+            accountNumber: accountNumber
+          }),
+          headers: {
+           
+            'Content-type': 'application/json',
+          },
+        })
+          .then(response => {
+            setBalance(response.data.accountBalance);
+          })
+
+          setWithdrawAmount('');
+          setAccountNumber('');
+          setError('');
+          setLoading(false);
+          toast(`Success! You have withdrawn  ${withdrawAmount} from Account #: ${accountNumber}.`);
+        
+} catch (error) {
+  console.log(error.message);
+}
+
+ };
 
   return (
       
@@ -43,7 +72,7 @@ export function Withdraw() {
 
              <FormGroup>
               <FormLabel className= "acct" >Account Number</FormLabel>
-                <FormControl onChange={((e) => setAccount_Nums(e.target.value))} 
+                <FormControl onChange={((e) => setAccountNumber(e.target.value))} 
                 value={account_Nums} type="number" className="event"  />
             </FormGroup>
       
@@ -57,11 +86,7 @@ export function Withdraw() {
             </Card>
               </Container>
     </>
-    )
-
-     
-        
-       
+    )    
   }
     
 export default Withdraw;
