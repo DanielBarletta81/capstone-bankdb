@@ -33,9 +33,9 @@ export function Dashboard() {
 
 
   
-  const handleLogout = () => {
+  const handleLogout = async() => {
     setError('');
-    return signOut(auth);
+    await signOut(auth);
      toast(`${user.email} now logged out!`)
        navigate('/login')
   }
@@ -47,7 +47,7 @@ export function Dashboard() {
 
   return (
     <div>
-      <div className='app-user'>Currently logged in user: ** {user.email} </div>
+      <div className='app-user'>Currently logged in user: ** {user && <p> {user.email}</p>}  </div>
 <Container className="d-flex align-items-center justify-content-center"
       >
        
@@ -57,7 +57,7 @@ export function Dashboard() {
            <Card.Img src={mountain}></Card.Img>
         
           <Card.Body>
-            <strong>User:</strong>{user.email}
+            <strong>User: {user && <p> {user.email}</p>}</strong>
          
           {error && <Alert variant="danger">{error}</Alert>}
         

@@ -1,7 +1,7 @@
 const { User } = require ("../model/user");
 const { Transaction } = require("../model/tranSchema");
 
-const { ObjectId } = require("bson");
+
 
 
 
@@ -9,7 +9,21 @@ const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USA'
 });
-// filter, update
+
+//get transactions
+const getTransactions = async (req, res) => {
+    const { accountNumber } = req.body;
+    try {
+
+        let result = await Transaction.find({ 'accountNumber': accountNumber });
+          res.status(201).send(result);
+    } catch (error) {
+         res.status(404).send(`User with account number ${Transaction.accountNumber} has no recent transactions`);
+    }
+
+}
+
+// deposit
 const makeDeposit = async (req, res) => {
 
   const {accountNumber, depositAmount} = req.body;
@@ -43,6 +57,8 @@ const makeDeposit = async (req, res) => {
         return res.json({ message: err.message });
     }
 }
+
+
 /// couldn't get this to work, changed to put req and worked
 const makeWithdraw = async (req, res) => {
   const { accountNumber, withdrawAmount } = req.body;
@@ -73,6 +89,7 @@ const makeWithdraw = async (req, res) => {
         return res.json({ message: err.message });
     }
 }
+
 // transfer
 const makeTransfer =  async (req, res) => {
   
@@ -83,7 +100,6 @@ const makeTransfer =  async (req, res) => {
          await User.findOne({
             'accountNumber': toAcct,
         })
-       
 
         if (!fromAcct || !toAcct) {
             res.status(400).send({ message: 'Please check account info' })
@@ -109,7 +125,7 @@ const makeTransfer =  async (req, res) => {
  let transactionDetails = {
                 transactionType: 'Transfer',
                 accountNumber: toAcct,
-               
+               description: 'incoming transfer',
                 sender: fromUser,
                 transactionAmount: transferAmount
             };
@@ -119,9 +135,6 @@ const makeTransfer =  async (req, res) => {
              res.status(200).send(`Transfer of ${formatter.format(transferAmount)} to ${toUser.accountNumber} was successful. Account# ${toUser.accountNumber} new balance: ${toUser.accountBalance}`);
         }
 
-       
-
- 
     }
     catch (err) {
         res.status(400).send({ err: err.message })
@@ -129,34 +142,15 @@ const makeTransfer =  async (req, res) => {
 }
 
 
-
-
-
- const getBalance =  function(req, res) {
-     User.findById(req.params.userId, function(err, user) {
-        if (err)
-            res.status(404).send(`User with Id ${Id} does not exist in the database`);
-        res.json(` ${user.email} your account Balance is $${user.accountBalance}`);
-    });
+const getBalance = async (req, res) => {
+    const { accountNumber } = req.body;
+   try {
+  let user = await User.findOne({ 'accountNumber': accountNumber },'accountBalance email');
+        res.status(201).json(` ${user.email} your account Balance is ${user.accountBalance}`);
+   } catch (error) {
+       console.log(error);
+   }
 };
 
-//         const amount = req.body.amount;
 
-//         await User.findOneAndUpdate(
-//             {
-//                 id: ObjectId,
-//                 accountNumber
-//             },
-//             { $inc: { accountBalance: amount } },
-//             { new: true }
-//         )
-//        // await User.save();
-//         res.send();
-//         console.log();
-
-//     } catch (err) {
-//         return res.status(400).json({ err: err.message })
-//     }
-// }
-// )
-module.exports = {getBalance, makeDeposit, makeWithdraw, makeTransfer}
+module.exports = {getBalance, makeDeposit, makeWithdraw, makeTransfer, getTransactions}

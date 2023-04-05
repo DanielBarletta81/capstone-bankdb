@@ -6,7 +6,8 @@ import {  auth } from '../firebase.js';
 // import { useAuth } from '../context/AuthContext.js';
 import { toast } from 'react-toastify';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-// import {  useAuth } from '../context/AuthContext.js';
+ import {  useAuth } from '../context/AuthContext.js';
+import { GoogleLogin } from '@react-oauth/google';
 
 
 
@@ -21,7 +22,7 @@ const [loginEmail, setLoginEmail] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState('');
 
- 
+ const { user } = useAuth();
  
 const handleLogin = async (e) => {
   e.preventDefault();
@@ -30,12 +31,15 @@ try {
 
   const userCredential = await
    signInWithEmailAndPassword(auth, loginEmail, loginPassword);
-  
-  console.log(userCredential.user.email);
-  toast(`Success! User Logged in: ${userCredential.user.email}`);
+   toast(`Success! User Logged in: ${userCredential.user.email}`);
+  if (user) {
+    console.log(userCredential.user.email);
+   
+  }
 } catch (error) {
    setError(error);
 }
+  
   navigate('/dashboard');
   
     setLoading(false);
@@ -98,13 +102,16 @@ try {
                 </Form.Group>
 
             <Button disabled={loading} onClick={handleLogin}> Login </Button>
-     <Button >Login with Google</Button>
-                No account yet? {' '}
-                <NavLink to="/register"> Sign up</NavLink>
+          </Form>
+          <Form>
+            <h5> No account yet? {' '}</h5>   
+            <NavLink to="/register"> Sign up</NavLink>
+            <Button className='google'>Login with Google</Button>
+             <GoogleLogin/>
               </Form>
            
         </Card>
-       
+      
     </Container>
     </>
   )    

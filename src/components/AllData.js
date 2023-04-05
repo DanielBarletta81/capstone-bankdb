@@ -40,7 +40,7 @@ export function AllData() {
             <td>{user._id}</td>
             <td>{user.username}</td>
             <td>{user.email}</td>
-            <td>{user.account_Nums}</td>
+            <td>{user.accountNumber}</td>
           </tr>
         ))}
       </tbody>

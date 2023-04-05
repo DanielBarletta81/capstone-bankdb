@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const { userLogin, handleReg, getAllData, getOneUser, getUserByID } = require('../controllers/authController.js');
-const { getBalance, makeDeposit, makeWithdraw, makeTransfer } = require('../controllers/transactionsCont.js');
+const { getBalance, makeDeposit, makeWithdraw, makeTransfer, getTransactions } = require('../controllers/transactionsCont.js');
 // const authMiddleware = require('../middleware/authMid.js');
 const { User } = require('../model/user');
 
@@ -28,13 +28,7 @@ router.patch('/:id', getUserByID, async (req, res) => {
 
 router.get('/allData', getAllData);//add auth middleware
 
-router.get('/users/balance/:userId',getBalance, async (req, res) => {
-     const id = req.params.userId;
-        res.send('Hello' + id)
-
-    }
-);
-
+router.get('/balance', getBalance);
 
 router.get('/users/:email', getOneUser);
 // router.delete('/users/:userId', requireSignIn, hasAuthorization, async (req, res) => {
@@ -51,7 +45,7 @@ router.get('/users/:email', getOneUser);
 //         });  
 //     }
 // });
-
+router.get('/transactions/:accountNumber', getTransactions)
  
 // withdrawals
 router.put('/withdraw', makeWithdraw);

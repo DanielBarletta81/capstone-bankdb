@@ -15,8 +15,7 @@ import { Transactions } from './components/Transactions.js';
 import { AllData } from './components/AllData.js';
 import { Login } from './components/Login.js';
 import { Footer } from './components/Footer.js';
-//import { setAuthToken } from './auth/authHeader.js';
-// import { AuthProvider } from './auth/authContext.js';
+import { Transfer } from './components/Transfer.js';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { AuthProvider, useAuth } from './context/AuthContext.js';
 
@@ -57,7 +56,8 @@ function App() {
          <Route exact path="/transactions" element={<Transactions/>}/>
         
          <Route exact path="/allData" element= {<AllData/>}/>
-                   
+
+          <Route exact path="/transfer" element= {<Transfer/>}/>     
           </Routes>
          
       </div>

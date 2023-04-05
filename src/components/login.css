@@ -10,10 +10,15 @@ div.login-card.card{
 form.login{
     margin: 10;
     padding: 10;
+    border-width: 15px;
+}
+button.btn.btn-primary{
+margin-bottom: 50px;
 }
 a{
-    margin-top: 25;
-    margin-bottom: 10;
+    justify-content: center;
+    margin-top: 5px;
+    margin-bottom: 100px;
     display:flex;
     flex-direction: column;
 }

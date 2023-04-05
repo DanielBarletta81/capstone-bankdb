@@ -28,11 +28,12 @@ validate: [isEmail, 'Please enter a valid email'],
   accountBalance: { type: Number, default: 0 },
 
   checkingAcct: {
-    type: Number, unique: true, default: Math.floor(Math.random() * 10000),
-  checkingBalance: { type: Number, default: 0 }},
+    type: Number, unique: true, default: Math.floor(Math.random() * 10000)
+  },
+  checkingBalance: { type: Number, default: 0 },
 
-  savingsAcct: { type: Number, unique: true, default: Math.floor(Math.random() * 10000), 
-     savingsBalance: { type: Number, default: 0 } },
+  savingsAcct: { type: Number, unique: true, default: Math.floor(Math.random() * 10000) }, 
+  savingsBalance: { type: Number, default: 0 },
   date: { type: Date },
     
   // user: {
