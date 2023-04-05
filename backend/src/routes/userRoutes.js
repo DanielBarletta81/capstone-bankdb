@@ -29,7 +29,7 @@ router.patch('/:id', getUserByID, async (req, res) => {
 router.get('/allData', getAllData);//add auth middleware
 
 router.get('/balance', getBalance);
-
+router.get('/transactions', getTransactions);
 router.get('/users/:email', getOneUser);
 // router.delete('/users/:userId', requireSignIn, hasAuthorization, async (req, res) => {
 //     try {

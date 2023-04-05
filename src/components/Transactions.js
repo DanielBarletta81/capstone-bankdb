@@ -13,7 +13,7 @@ export function Transactions() {
   const [account, setAccount] = useState('');
 
   const getUserTransacts = async () => {
-    await axios.get('http://localhost:8080/api/transactions/:accountNumber')
+    await axios.get('http://localhost:8080/api/transactions')
       .then(data => {
        setTransactions(data?.data);
       })

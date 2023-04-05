@@ -25,7 +25,8 @@ export const Transfer = () => {
        <div className='app-user'>Currently logged in user:{user.email} </div>
       <Container>
         
-          <Form >
+            <Form >
+                <Form.Text>User Balance: ${user.accountBalance}</Form.Text>
               <h1>Transfer Funds</h1>
 
               <Form.Label>Origin Account #</Form.Label>

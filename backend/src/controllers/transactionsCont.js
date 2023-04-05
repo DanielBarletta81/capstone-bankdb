@@ -152,5 +152,17 @@ const getBalance = async (req, res) => {
    }
 };
 
+// const getRec = async (req, res) => {
+//     const { accountNumber } = req.body;
+//    try {
+//   let user = await User.findOne({ 'accountNumber': accountNumber },'accountBalance email');
+//         res.status(201).json(` ${user.email} your account Balance is ${user.accountBalance}`);
+//    } catch (error) {
+//        console.log(error);
+//    }
+// };
+
+
+
 
 module.exports = {getBalance, makeDeposit, makeWithdraw, makeTransfer, getTransactions}
