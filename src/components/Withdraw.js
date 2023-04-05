@@ -26,13 +26,11 @@ export function Withdraw() {
   <Container className="d-flex align-items-center justify-content-center">
         <Card className="depCard">
           <Card.Img src={cardTop}></Card.Img>
-        {/* <Card.Header className="cardhead">Make a Deposit</Card.Header> */}
-        {/* { currentUser.email} */}
         {error && <Alert variant="danger">{error }</Alert>}   
           <Card.Header className="user">Logged in as: {user.email }</Card.Header>
           <Form>
             <FormGroup>
-              <FormLabel className="balance">Current Balance: $ {balance} </FormLabel>
+              <FormLabel className="balance">Current Balance: $ {user.accountBalance} </FormLabel>
             
             </FormGroup>
 
