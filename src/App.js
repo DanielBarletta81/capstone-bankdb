@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 
 import {  BrowserRouter, Route, Routes} from 'react-router-dom';
 
@@ -17,7 +17,7 @@ import { Login } from './components/Login.js';
 import { Footer } from './components/Footer.js';
 import { Transfer } from './components/Transfer.js';
 import 'react-toastify/dist/ReactToastify.min.css';
-import { AuthProvider, useAuth } from './context/AuthContext.js';
+import { AuthProvider } from './context/AuthContext.js';
 
 
 function App() {

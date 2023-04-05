@@ -3,8 +3,8 @@ import { Nav, Navbar, Container } from 'react-bootstrap';
 
 
 import { Link } from 'react-router-dom';
-import "bootstrap/dist/css/bootstrap.min.css";
-import  "https://kit.fontawesome.com/806907d79d.js";
+
+
 import './navbar.css';
 
 

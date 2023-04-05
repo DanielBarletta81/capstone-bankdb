@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import axios from '../api/axios.js';
-import { Dropdown, Card , NavLink, Button, Alert} from 'react-bootstrap';
+import { Card , NavLink, Button} from 'react-bootstrap';
 //import { useAuth } from '../context/AuthContext.js';
 import clip from './cashclip.jpg';
 import './dashb.css';
