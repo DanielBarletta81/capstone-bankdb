@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
-import { Button, Container, Form, NavLink } from 'react-bootstrap'
-import axios from '../api/axios.js'
+import React, { useState } from 'react';
+import { Button, Container, Form, NavLink } from 'react-bootstrap';
+import axios from '../api/axios.js';
+import { toast } from 'react-toastify';
+
 
 export const Transfer = () => {
 
@@ -11,7 +13,7 @@ export const Transfer = () => {
     const makeTransfer = async () => {
         try {
             const data = await axios.put('/api/transfer', { transferAmount, fromAcct, toAcct });
-         
+            toast('transfer success!');
              console.log(data);    
         } catch (error) {
             console.log(error);
@@ -19,7 +21,8 @@ export const Transfer = () => {
 }
 
 
-  return (
+    return (<>
+       <div className='app-user'>Currently logged in user:{user.email} </div>
       <Container>
         
           <Form >
@@ -45,7 +48,8 @@ export const Transfer = () => {
 
 
 <NavLink href='/dashboard'>Back to Dashboard</NavLink>
-    </Container>
+        </Container>
+        </>
   )
 }
 
