@@ -18,20 +18,20 @@ import { Footer } from './components/Footer.js';
 //import { setAuthToken } from './auth/authHeader.js';
 // import { AuthProvider } from './auth/authContext.js';
 import 'react-toastify/dist/ReactToastify.min.css';
-import { AuthProvider } from './context/AuthContext.js';
+import { AuthProvider, useAuth } from './context/AuthContext.js';
 
 
 function App() {
-
+  
   
   return (
     <GoogleOAuthProvider clientId='412711755874-47is1si61kd9v8srifbh1akbltdaqo52.apps.googleusercontent.com'>
-<AuthProvider>
+<AuthProvider >
     <BrowserRouter>
      
      
           <div className="container-fluid">
-            <div className='app-user'>Currently logged in: </div>
+           
  <NavBar />
 
     <Routes>

@@ -21,7 +21,8 @@ export function Withdraw() {
 
   return (
       
-  <>
+    <>
+       <div className='app-user'>Currently logged in user:{user.email} </div>
   <Container className="d-flex align-items-center justify-content-center">
         <Card className="depCard">
           <Card.Img src={cardTop}></Card.Img>

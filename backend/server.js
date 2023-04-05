@@ -54,15 +54,6 @@ app.get('/dashboard', (req, res) => {
 });
 
 
-
-
-// app.get('/auth/userData', authenticateToken, async (req, res) => {
-//   const username = req.body.username;
-//   const user = await User.findOne({"username": username})
-//   res.json(user)
-// })
-
-
 //only listen if connected to DB
 mongoose.connection.once('open', () => {
     console.log('Actually connected to MongoDB');

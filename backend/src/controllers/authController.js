@@ -50,26 +50,23 @@ async function getUserByID (req, res, next) {
 // register
 
 const handleReg = async (req, res) => {
-  const { username, email, password } = req.body;
   
-    await createUserWithEmailAndPassword(auth, email, password)
-    .then((userRecord) => {
-      res.status(201).json(userRecord);
-      console.log('created: ', userRecord.uid)
-    })
-.catch((error)  =>  {
-    console.log(error.message)
-  }) ;
+  try {
+    const newUser = {
+    username: req.body.username,
+    email: req.body.email,
+    password: req.body.password
+    }
+
+   const user =   await User.create({ username: newUser.username, email: newUser.email, password: newUser.password, balance: 0 });
+     console.log(user);
+    res.status(201).json({ message: `created new user ${user}` })
+    await user.save();
+   } catch (error) { 
+     console.log(error.message);
+   }
 }
 
-const createDBUser = async () => {
-   const authUser = req.currentUser;
-  if (authUser) {
-    const user =  await User.create({ email: authUser.email, password: authUser.password });
-    const savedUser = user.save();
-    return res.status(201).json(savedUser)
-};
-}
 
 // login
 const userLogin = async (req, res) => {
@@ -132,29 +129,4 @@ const forgotPw = (req, res) => {
     });
 };
 
- const sendUserToDB = (req, res) => {
-
-  if (auth) {
-    const user =  User(req.body);
-    const savedUser = user.save();
-return res.status(201).json(savedUser);
-  }
-  return res.status(403).send('Not authorized');
-};
-
-async function checkAuth(req, res, next) {
-  if (req.headers.authtoken) {
-    await verifyIdToken(req.headers.authtoken)
-      .then(() => {
-        next()
-      }).catch(() => {
-        res.status(403).send('Unauthorized')
-      });
-  } else {
-    res.status(403).send('Unauthorized')
-  }
-}
-
-
-
-module.exports = { checkAuth, getAllData, handleReg, userLogin, getOneUser, getUserByID, sendUserToDB , forgotPw};
+module.exports = { getAllData, handleReg, userLogin, getOneUser, getUserByID,  forgotPw};

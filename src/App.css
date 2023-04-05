@@ -18,6 +18,8 @@ span.navbar-brand {
   margin-left: 10;
   border-style: double;
   border-radius: 20%;
+  background-color: rgb(78, 138, 190);
+  justify-items: center;
 }
 
 div.container-fluid{
@@ -26,10 +28,14 @@ div.container-fluid{
 
 }
 div.app-user{
-  background-color: rgb(188, 177, 177);
-justify-content: end;
-
-font: white;
+  background-color: rgb(222, 216, 216);
+text-align: end;
+position: relative;
+font: 16pt sans-serif ;
+border-style: inset;
+border-radius: 20%;
+border-color: black;
+border-width: 10px;
 }
 
 div.footer.card{

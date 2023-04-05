@@ -2,11 +2,17 @@ import {  useState } from 'react';
 import { Form, Button, Card, Alert, Container } from 'react-bootstrap';
 import './login.css';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { login } from '../firebase.js';
-import { useAuth } from '../context/AuthContext.js';
+import {  auth } from '../firebase.js';
+// import { useAuth } from '../context/AuthContext.js';
 import { toast } from 'react-toastify';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+// import {  useAuth } from '../context/AuthContext.js';
+
+
+
 
 export const Login = () => {
+ 
  
   const navigate = useNavigate();
 
@@ -15,18 +21,23 @@ const [loginEmail, setLoginEmail] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState('');
 
-  const { user } = useAuth();
+ 
  
 const handleLogin = async (e) => {
-    e.preventDefault();
-try {
-   await login();
-  toast(`Success! User Logged in: ${user.email}'`);
+  e.preventDefault();
   
+try {
+
+  const userCredential = await
+   signInWithEmailAndPassword(auth, loginEmail, loginPassword);
+  
+  console.log(userCredential.user.email);
+  toast(`Success! User Logged in: ${userCredential.user.email}`);
 } catch (error) {
    setError(error);
 }
-     navigate('/dashboard');
+  navigate('/dashboard');
+  
     setLoading(false);
 }
 
@@ -46,6 +57,7 @@ try {
 
   return (
     <>
+      {/* <div className='app-user'>Currently logged in user: ** {user.email} </div> */}
       <Container className="d-flex align-items-center justify-content-center"
       >
        

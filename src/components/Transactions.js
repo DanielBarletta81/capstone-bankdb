@@ -2,7 +2,7 @@ import React from 'react'
 import { Button, Card, Container } from 'react-bootstrap';
 import { useAuth } from '../context/AuthContext.js';
 import axios from '../api/axios.js';
-
+import './transactions.css';
 
 
 
@@ -10,11 +10,11 @@ import axios from '../api/axios.js';
 export function Transactions() {
   const { user } = useAuth();
 
-  const getUserBalance = async () => {
+  const getUserTransacts = async () => {
   try {
-    let userBalance = await axios.ge('/users/balance/:userId')
+    let userTransactions = await axios.get('/users/transactions')
       .then(data => console.log(data.data));
-    console.log(userBalance);
+    console.log(userTransactions);
   } catch (error) {
     console.log(error);
   }
@@ -25,18 +25,21 @@ export function Transactions() {
 
 
   return (
-    <Container className="d-flex align-items-center justify-content-center">
- <Card className= "d-flex">
+    <>
+     <div className='app-user'>Currently logged in user: ** {user.email} </div>
+    <Container className="fluid">
+ <Card className= "transactions">
       <Card.Img variant="top" src="holder.js/100px180" />
-      <Card.Body>
+     
           <Card.Title>Recent Transactions for:{user.email}  </Card.Title>
         <Card.Text>
          Transactions go here....
         </Card.Text>
-        <Button variant="primary" onClick={getUserBalance}>View Transactions</Button>
-      </Card.Body>
+        <Button variant="primary" onClick={getUserTransacts}>View Transactions</Button>
+      
       </Card>
       </Container>
+      </>
   )
 }
 

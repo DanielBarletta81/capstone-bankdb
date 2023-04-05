@@ -1,9 +1,9 @@
-import {  useRef, useState } from "react";
+import {  useState } from "react";
 
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth }  from '../firebase.js';
 import { useNavigate } from "react-router-dom";
-import { Container,Form, Button, Row, Col, Card , Alert} from "react-bootstrap";
+import { Container,Form, Button, Row, Col, Card } from "react-bootstrap";
 //import { Notify } from "../Toasts/notify.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
@@ -11,13 +11,7 @@ import axios from "axios";
 
 import "./createAcct.css";
 import { toast } from "react-toastify";
-import { useAuth } from "../context/AuthContext.js";
-
-
-
-
-
-
+// import { useAuth } from "../context/AuthContext.js";
 
 
 export const CreateAccount = () => {
@@ -30,24 +24,45 @@ export const CreateAccount = () => {
   const [regUsername, setRegUsername] = useState('');
   const [confirmPW, setConfirmPW] = useState('');
 
-  const { user } = useAuth();
-  
 
-
-   
   const register = async (e) => {
     e.preventDefault();
-  try {
-     await
-      createUserWithEmailAndPassword(auth, regEmail, regPassword)
+
+     if (regPassword !== confirmPW) {
+        return toast( 'passwords must match!' );
+      }
+    try {
+
+      const user =
+        await
+          createUserWithEmailAndPassword(auth, regEmail, regPassword)
    
-    console.log( user);
-    toast(`Success! Created User: ${user.email}`);
+      console.log(user.email);
+      toast(`Success! Created User: ${user.email}`);
   
+      await axios.post("http://localhost:8080/api/signup", JSON.stringify({
+      username: regUsername,
+        email: regEmail,
+        password: regPassword
+   }),
+        {
+          headers: {
+            'Content-type': 'application/JSON'
+          }
+        })
+        .then((res) => {
+          console.log("server response:", res);
+        })
+        .catch((error) => {
+          console.log("error in server:", error);
+        });
+
     setLoading(false);
-  } catch(err) {
+    } catch (err) {
+     
     console.log(err.message);
-     setError(err);
+      setError(err);
+      
     };
       navigate('/dashboard');
 }

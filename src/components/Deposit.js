@@ -33,7 +33,7 @@ export const Deposit = () => {
   await axios.patch('http://localhost:8080/api/deposit', {
           body: JSON.stringify({
             depositAmount: depositAmount,
-           balance: balance,
+           balance: balance + depositAmount,
             account_Nums: account_Nums
           }),
           headers: {
@@ -62,6 +62,7 @@ export const Deposit = () => {
   return (
 
     <>
+       <div className='app-user'>Currently logged in user:{user.email} </div>
   <Container className="d-flex align-items-center justify-content-center">
         <Card className="depCard">
           <Card.Img src={depositPic}></Card.Img>
@@ -71,7 +72,7 @@ export const Deposit = () => {
           <Card.Header className="user">Logged in as: -- {user.email }</Card.Header>
           <Form>
             <FormGroup>
-              <FormLabel className="balance">Current Balance: $ {balance} </FormLabel>
+              <FormLabel className="balance">Current Balance: $ {user.balance} </FormLabel>
             
             </FormGroup>
 

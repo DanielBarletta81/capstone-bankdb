@@ -1,13 +1,13 @@
 const express = require('express');
-const { ObjectId } = require('mongodb');
+
 const router = express.Router();
-const { userLogin, handleReg, getAllData, getOneUser, getUserByID, sendUserToDB } = require('../controllers/authController.js');
-const { getBalance, makeDeposit } = require('../controllers/transactionsCont.js');
+const { userLogin, handleReg, getAllData, getOneUser, getUserByID } = require('../controllers/authController.js');
+const { getBalance, makeDeposit, makeWithdraw, makeTransfer } = require('../controllers/transactionsCont.js');
 // const authMiddleware = require('../middleware/authMid.js');
 const { User } = require('../model/user');
 
 
-router.post('/signup', handleReg, sendUserToDB);
+router.post('/signup', handleReg);
 
 router.post('/login', userLogin); 
 
@@ -52,109 +52,12 @@ router.get('/users/:email', getOneUser);
 //     }
 // });
 
-// old deposit method!!!!!
-// router.put('/deposit/:account_Nums', async (req, res) => {
-
-//     try {
-
-//         const account_Nums = req.params.account_Nums;
-
-//         const amount = req.body.amount;
-
-//         await User.findOneAndUpdate(
-//             {
-//                 id: ObjectId,
-//                 account_Nums
-//             },
-//             { $inc: { balance: amount } },
-//             { new: true }
-//         )
-      
-//         res.send();
-//         console.log();
-
-//     } catch (err) {
-//         return res.status(400).json({ err: err.message })
-//     }
-// }
-// )
  
 // withdrawals
-router.put('/withdraw/:id/:account_Nums', async (req, res) => {
-  try {
-      const account_Nums = req.params.account_Nums;
-
-        const amount = req.body.amount;
-
-        await User.findOneAndUpdate(
-            {
-                id: ObjectId,
-                account_Nums
-            },
-            { $inc: { balance: - amount } },
-            { new: true }
-        )
-      const balance = account_Nums.balance;      
-      if (amount < 0 || amount > balance) {
-        res.status(400).send({
-        message: 'Insufficient balance to process transaction',
-      })
-     }      
-       // await User.save();
-        res.send();
-        console.log();
-
-  } catch (err) {
-
-    res.status(400).json({ error: err.message })
-  }
-})
+router.put('/withdraw', makeWithdraw);
 
 //work 3/1/23
-router.put('/transfer/:fromAccount/:toAccount', async (req, res) => {
-
-    try {
-        const { fromAccount, toAccount } = req.params
-        const { amount } = req.body
-         await User.findOne({ account_Nums: fromAccount })
-         await User.findOne({
-            account_Nums: toAccount,
-        })
-       
-
-        if (!fromAccount || !toAccount) {
-            res.status(400).send({ message: 'Please check account info' })
-        
-        } if (fromAccount.balance - amount < 0) {
-            res.status(400).send({
-                message: 'Transaction not processed due to insufficient balance',
-            })
-        } else {
-            await User.findOneAndUpdate(
-                { account_Nums: fromAccount },
-              { $inc: { balance: - amount } },
-                { new: true },
-            )
-            await User.findOneAndUpdate(
-                { account_Nums: toAccount },
-               { $inc: { balance: + amount } },
-                { new: true },
-            )
-
-        }
-
-        const newFromBalances = await User.find({
-            account_Nums: fromAccount,
-            account_Nums: toAccount
-        }).select('balance')
-        res.send(newFromBalances)
-
-    }
-    catch (err) {
-        res.status(400).send({ err: err.message })
-    }
-})
-
+router.put('/transfer/', makeTransfer);
 // works 2/27/23
 router.get('/balance/:account_Nums', async (req, res) => {
   try {

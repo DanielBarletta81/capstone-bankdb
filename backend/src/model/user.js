@@ -1,3 +1,4 @@
+//const { ObjectId } = require('bson');
 const mongoose = require('mongoose');
 const { isEmail } = require('validator');
 
@@ -12,22 +13,32 @@ const UserSchema = new mongoose.Schema({
         required: true,
         unique: true,
 validate: [isEmail, 'Please enter a valid email'],
-    },
+  },
+    
       password: {
       type: String,
       required: true,
       minlength: 8,
       select: false, // When query for a user, do we want to return password ?
     },
-    amount: {type: Number},
-    balance: {type: Number, min: 0},
-    account_Nums: {type: Number},
+  
+  
+  accountNumber: { type: Number, default: Math.floor(Math.random() * 1000) + 111 },
+
+  accountBalance: { type: Number, default: 0 },
+
+  checkingAcct: {
+    type: Number, unique: true, default: Math.floor(Math.random() * 10000),
+  checkingBalance: { type: Number, default: 0 }},
+
+  savingsAcct: { type: Number, unique: true, default: Math.floor(Math.random() * 10000), 
+     savingsBalance: { type: Number, default: 0 } },
   date: { type: Date },
     
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "user"
-  }
+  // user: {
+  //   type:  mongoose.Schema.Types.ObjectId,
+  //   ref: "user"
+  // }
 
 },
         {

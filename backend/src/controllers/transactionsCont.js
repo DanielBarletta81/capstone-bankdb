@@ -1,74 +1,142 @@
 const { User } = require ("../model/user");
 const { Transaction } = require("../model/tranSchema");
 
+const { ObjectId } = require("bson");
+
+
 
 const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USA'
 });
-
+// filter, update
 const makeDeposit = async (req, res) => {
 
-   const {account_Nums, depositAmount} = req.body;
+  const {accountNumber, depositAmount} = req.body;
     try {
-
-        let user =  await User.findById(req.user.user_id)
+        const deposit = { $inc: { 'accountBalance': + depositAmount } };
+        let user = await User.findOneAndUpdate(
+            { 'accountNumber': accountNumber },deposit,
+            { new: true , returnOriginal: false}
+        );
 
         if (user === null) {
-            res.status(404).send(`This User with account number ${account_Nums} does not exist`);
+            res.status(404).send(`The User with account number ${accountNumber} does not exist`);
         }
         if (depositAmount < 10) {
             res.status(400).send(`Sorry, deposit amount cannot be less than 10`);
         }
+     
         if (depositAmount >= 10) {
-            user.balance = user.balance + depositAmount;
+
             let transactionDetails = {
                 transactionType: 'Deposit',
-                accountNumber: account_Nums,
+                accountNumber: accountNumber,
                 transactionAmount: depositAmount
             };
              
             await Transaction.create(transactionDetails)
-            res.status(201).send(`Deposit of ${formatter.format(depositAmount)} to Acct# ${account_Nums} was successful.`)
+            res.status(201).send(`Deposit of ${formatter.format(depositAmount)} to Acct# ${accountNumber} was successful.`)
         }
-
+      
     } catch (err) {
         return res.json({ message: err.message });
     }
 }
-
-const makeWithdraw = async function(req, res) {
+/// couldn't get this to work, changed to put req and worked
+const makeWithdraw = async (req, res) => {
+  const { accountNumber, withdrawAmount } = req.body;
     try {
-        const { withdrawAmount } = req.body;
-        if (!withdrawAmount) {
-            res.status(400).send("Please input the amount you'd like to withdraw");
-        }
-        let currentUser = await User.findById(req.user.user_id);
-        if (withdrawAmount > currentUser.accountBalance) {
-            res.status(400).send("Insufficient funds to make this withdrawal");
-        }
-        currentUser.accountBalance = currentUser.accountBalance - withdrawAmount;
-        let transactionDetails = {
-            transactionType: 'Withdraw',
-            account_Nums: currentUser.account_Nums,
-            description: `GoodBank withdrawal of ${formatter.format(withdrawAmount)}`,
+      
+ const withdraw = { $inc: { 'accountBalance': - withdrawAmount } };
+        let theUser = await User.findOneAndUpdate(
+             {'accountNumber': accountNumber} , withdraw,
+            { new: true , returnOriginal: false}
+        );
 
-            transactionAmount: withdrawAmount
-        };
-        await currentUser.save();
-        await Transaction.create(transactionDetails);
-        res.status(200).send(`Withdrawal of ${formatter.format(withdrawAmount)} was successful`);
+        if (theUser === null) {
+            res.status(404).send(`This User with account number ${accountNumber} does not exist`);
+        }
+
+
+            let transactionDetails = {
+                transactionType: 'Withdraw',
+                accountNumber: accountNumber,
+                transactionAmount: withdrawAmount
+            };
+             
+            await Transaction.create(transactionDetails)
+            res.status(201).send(`Withdrawal of ${formatter.format(withdrawAmount)} from Acct# ${accountNumber} was successful.`)
+        
+     
     } catch (err) {
-        res.json({ message: err });
+        return res.json({ message: err.message });
     }
 }
+// transfer
+const makeTransfer =  async (req, res) => {
+  
+        const { transferAmount, fromAcct, toAcct } = req.body
+    try {
+      
+         await User.findOne({ 'accountNumber': fromAcct })
+         await User.findOne({
+            'accountNumber': toAcct,
+        })
+       
+
+        if (!fromAcct || !toAcct) {
+            res.status(400).send({ message: 'Please check account info' })
+        
+        } if (fromAcct.balance - transferAmount < 0) {
+            res.status(400).send({
+                message: 'Transaction not processed due to insufficient balance',
+            })
+        } else {
+            let fromUser = await User.findOneAndUpdate(
+                { 'accountNumber': fromAcct },
+                { $inc: { 'accountBalance': - transferAmount } },
+                { new: true, returnOriginal: false },
+            );
+            
+            let toUser = await User.findOneAndUpdate(
+                { 'accountNumber': toAcct },
+                { $inc: { 'accountBalance': + transferAmount } },
+                { new: true },
+            );
+            console.log(toUser);
+
+ let transactionDetails = {
+                transactionType: 'Transfer',
+                accountNumber: toAcct,
+               
+                sender: fromUser,
+                transactionAmount: transferAmount
+            };
+
+        await Transaction.create(transactionDetails);
+
+             res.status(200).send(`Transfer of ${formatter.format(transferAmount)} to ${toUser.accountNumber} was successful. Account# ${toUser.accountNumber} new balance: ${toUser.accountBalance}`);
+        }
+
+       
+
+ 
+    }
+    catch (err) {
+        res.status(400).send({ err: err.message })
+    }
+}
+
+
+
 
 
  const getBalance =  function(req, res) {
      User.findById(req.params.userId, function(err, user) {
         if (err)
             res.status(404).send(`User with Id ${Id} does not exist in the database`);
-        res.json(` ${user.email} your account balance is $${user.balance}`);
+        res.json(` ${user.email} your account Balance is $${user.accountBalance}`);
     });
 };
 
@@ -77,9 +145,9 @@ const makeWithdraw = async function(req, res) {
 //         await User.findOneAndUpdate(
 //             {
 //                 id: ObjectId,
-//                 account_Nums
+//                 accountNumber
 //             },
-//             { $inc: { balance: amount } },
+//             { $inc: { accountBalance: amount } },
 //             { new: true }
 //         )
 //        // await User.save();
@@ -91,4 +159,4 @@ const makeWithdraw = async function(req, res) {
 //     }
 // }
 // )
-module.exports = {getBalance, makeDeposit, makeWithdraw}
+module.exports = {getBalance, makeDeposit, makeWithdraw, makeTransfer}

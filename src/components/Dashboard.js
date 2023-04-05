@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { signOut, onAuthStateChanged } from 'firebase/auth';
+import React, { useState} from 'react';
+import {  signOut } from 'firebase/auth';
 import { Card, Button, Alert, Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
 import { useAuth } from '../context/AuthContext.js';
@@ -8,7 +8,7 @@ import DashSideBar from './dashSideBar.js';
 
 import mountain from './Mountain_Profile.jpg';
 import './dashb.css';
-import { auth, logout} from '../firebase.js';
+import { auth} from '../firebase.js';
 import { toast } from 'react-toastify';
 
 
@@ -21,40 +21,33 @@ export function Dashboard() {
   const navigate = useNavigate();
   
 
- useEffect(()=>{
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
+//  useEffect(()=>{
+//         onAuthStateChanged(auth, (user) => {
+//             if (user) {
             
-              const uid = user.uid;
+//               const uid = user.uid;
       
-              console.log("uid", uid)
-            } else {
-             toast('No logged in user found!!')
-              console.log("user is logged out")
-            }
-          });
-         
-    }, [])
-
+//               console.log("uid", uid)
+//             } else {
+//              toast('No logged in user found!!')
 
 
   
- async function handleLogout (){
+  const handleLogout = () => {
     setError('');
-
-    try {
-      await logout(auth);
-      toast(`${user.email} now logged out!`)
+    return signOut(auth);
+     toast(`${user.email} now logged out!`)
        navigate('/login')
-    } catch (error) {
+  }
+     
+    if (error) {
       setError('Failed to log out!')
     }
-   
 
-  }
 
   return (
     <div>
+      <div className='app-user'>Currently logged in user: ** {user.email} </div>
 <Container className="d-flex align-items-center justify-content-center"
       >
        
