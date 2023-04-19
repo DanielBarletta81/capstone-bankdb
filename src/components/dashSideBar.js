@@ -31,7 +31,7 @@ function DashSideBar() {
       <Button onClick={ getBalance} style={{margin: 10, padding: 10}}>Display Balances</Button>
      
      <NavLink href= '/transfer' style={{margin: 10, padding: 10}}>Make a Transfer</NavLink>
-          <NavLink style={{margin: 10, padding: 10}}>Recent Transactions</NavLink>
+          <NavLink href= '/transactions' style={{margin: 10, padding: 10}}>Recent Transactions</NavLink>
           <NavLink style={{margin: 10, padding: 10}}>Statements</NavLink>
           <NavLink style={{margin: 10, padding: 10}}>Messages</NavLink>
           <NavLink style={{margin: 10, padding: 10}}>Contact Good Bank</NavLink>

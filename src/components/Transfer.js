@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { Button, Container, Form, NavLink } from 'react-bootstrap';
 import axios from '../api/axios.js';
 import { toast } from 'react-toastify';
+import { useAuth } from '../context/AuthContext.js';
 
 
 export const Transfer = () => {
+    const { user } = useAuth();
 
     const [transferAmount, setTransferAmount] = useState(0);
     const [toAcct, setToAcct] = useState('');

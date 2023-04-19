@@ -28,9 +28,18 @@ export const CreateAccount = () => {
   const register = async (e) => {
     e.preventDefault();
 
+    if (!regPassword || !regUsername || !regEmail || !confirmPW) {
+        return toast( 'please fill out all fields!' );
+      }
+
+    if (!regPassword) {
+        return toast( 'please enter password!' );
+      }
+
      if (regPassword !== confirmPW) {
         return toast( 'passwords must match!' );
-      }
+     }
+    
     try {
 
       const user =

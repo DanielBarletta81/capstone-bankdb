@@ -26,6 +26,10 @@ const [loginEmail, setLoginEmail] = useState('');
  
 const handleLogin = async (e) => {
   e.preventDefault();
+
+  if ( !loginEmail || !loginPassword) {
+        return toast( 'please fill out both fields!' );
+      }
   
 try {
 
