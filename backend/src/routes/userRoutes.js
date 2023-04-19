@@ -51,7 +51,7 @@ router.get('/transactions/:accountNumber', getTransactions)
 router.put('/withdraw', makeWithdraw);
 
 //work 3/1/23
-router.put('/transfer/', makeTransfer);
+router.put('/transfer', makeTransfer);
 // works 2/27/23
 router.get('/balance/:account_Nums', async (req, res) => {
   try {
