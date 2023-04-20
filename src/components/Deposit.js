@@ -58,17 +58,17 @@ export const Deposit = () => {
 
 };
 
-  const showBalance = async () => {
-    try {
-      await axios.get('http://localhost:8080/api/deposit')
-        .then(data => {
-          setAccountBalance(data.data.accountBalance);
-        });
-    } catch (error) {
-      console.log(error)
-    }
-    showBalance();
-  }
+  // const showBalance = async () => {
+  //   try {
+  //     await axios.get('http://localhost:8080/api/deposit')
+  //       .then(data => {
+  //         setAccountBalance(data.data.accountBalance);
+  //       });
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  //   showBalance();
+  // }
 
 
   
@@ -86,7 +86,7 @@ export const Deposit = () => {
           <Card.Header className="user">Logged in as: -- {user.email }</Card.Header>
           <Form>
             <FormGroup>
-              <FormLabel className="balance">Current Balance: $ {showBalance} </FormLabel>
+              <FormLabel className="balance">Current Balance: $ {user.accountBalance} </FormLabel>
             
             </FormGroup>
 

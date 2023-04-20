@@ -33,7 +33,7 @@ export function Transactions() {
        <Card.Title>Recent Transactions for:{user.email}  </Card.Title>
        
          
-           <Form className='activity'>
+           <Form className='d-flex'>
           <Form.Label>Enter Account #</Form.Label>
             <Form.Control onChange={(e) => setAccount(e.target.value)}></Form.Control>
              <Button variant="primary" onClick={getUserTransacts}>View Transactions</Button>

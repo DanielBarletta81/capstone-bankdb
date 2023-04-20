@@ -46,7 +46,7 @@ const makeDeposit = async (req, res) => {
             let transactionDetails = {
                 transactionType: 'Deposit',
                 accountNumber: accountNumber,
-                transactionAmount: depositAmount
+                transactionAmount: depositAmount,
             };
              
             await Transaction.create(transactionDetails)
