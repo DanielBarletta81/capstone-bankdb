@@ -36,14 +36,10 @@ export const Deposit = () => {
            accountBalance: accountBalance + depositAmount,
             accountNumber: accountNumber
           }),
-          headers: {
-           
-            'Content-type': 'application/json',
-          },
         })
-          .then(response => {
-            setAccountBalance(response?.data?.accountBalance);
-            console.log(accountBalance);
+          .then(data => {
+            setAccountBalance(data.user.accountBalance);
+            console.log(user.accountBalance);
           })
 
           setDepositAmount('');
