@@ -42,7 +42,7 @@ export const Deposit = () => {
           },
         })
           .then(response => {
-            setAccountBalance(response.data.accountBalance);
+            setAccountBalance(response?.data?.accountBalance);
             console.log(response.data.accountBalance);
           })
 
