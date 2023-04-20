@@ -95,7 +95,7 @@ export const Deposit = () => {
                 value={accountNumber} type="number" className="event"  />
             </FormGroup>
       
- <Button className="deposit" disabled={loading} onClick={onDeposit} value={depositAmount} type="submit" >Deposit</Button>
+ <Button className="deposit" disabled={loading} onClick={onDeposit}  type="submit" >Deposit</Button>
       
  </Form>
           
