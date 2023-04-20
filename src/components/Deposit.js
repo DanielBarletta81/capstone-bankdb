@@ -28,7 +28,7 @@ export const Deposit = () => {
         if (!depositAmount || depositAmount <= 0) {
           setError("Please enter valid deposit amount");
         }
-  await axios.patch('http://localhost:8080/api/deposit')
+  await axios.patch('http://localhost:8080/api/deposit'
   , {
           body: JSON.stringify({
             depositAmount: depositAmount,
