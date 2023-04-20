@@ -14,7 +14,7 @@ export const Deposit = () => {
   const [depositAmount, setDepositAmount] = useState(0);
 
   const [accountNumber, setAccountNumber] = useState(0);
-  const [accountBalance, setAccountBalance] = useState(100);
+  const [accountBalance, setAccountBalance] = useState(0);
   const [error, setError] = useState('');
    const [loading, setLoading] = useState(false);
 
@@ -43,11 +43,11 @@ export const Deposit = () => {
         })
           .then(response => {
             setAccountBalance(response.data.accountBalance);
+            console.log(response.data.accountBalance);
           })
 
           setDepositAmount('');
           setAccountNumber('');
-          setAccountBalance('');
           setError('');
           setLoading(false);
           toast(`Success! You have deposited \$ ${depositAmount} into Account #: ${accountNumber}.`);
@@ -70,9 +70,6 @@ export const Deposit = () => {
   //   showBalance();
   // }
 
-
-  
-  
   return (
 
     <>
