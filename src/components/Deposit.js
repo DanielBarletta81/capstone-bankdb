@@ -31,11 +31,11 @@ export const Deposit = () => {
           setError("Please enter valid deposit amount");
         }
   await axios.patch('http://localhost:8080/api/deposit', {
-          body: JSON.stringify({
-            depositAmount: depositAmount,
-           accountBalance: accountBalance + depositAmount,
-            accountNumber: accountNumber
-          }),
+          // body: JSON.stringify({
+          //   depositAmount: depositAmount,
+          //  accountBalance: accountBalance + depositAmount,
+          //   accountNumber: accountNumber
+          // }),
           headers: {
            
             'Content-type': 'application/json',
