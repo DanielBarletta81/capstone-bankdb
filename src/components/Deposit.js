@@ -23,20 +23,19 @@ export const Deposit = () => {
     const onDeposit = async (e) => {
       e.preventDefault();
 
-  
       try {
-       
 
         if (!depositAmount || depositAmount <= 0) {
           setError("Please enter valid deposit amount");
         }
-  await axios.patch('http://localhost:8080/api/deposit', {
-          body: JSON.stringify({
-            depositAmount: depositAmount,
-           accountBalance: accountBalance + depositAmount,
-            accountNumber: accountNumber
-          }),
-        })
+  await axios.patch('http://localhost:8080/api/deposit')
+  //, {
+  //         body: JSON.stringify({
+  //           depositAmount: depositAmount,
+  //          accountBalance: accountBalance + depositAmount,
+  //           accountNumber: accountNumber
+  //         }),
+  //       })
           .then(data => {
             setAccountBalance(data.user.accountBalance);
             console.log(user.accountBalance);
