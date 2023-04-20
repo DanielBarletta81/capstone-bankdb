@@ -37,7 +37,7 @@ export const Deposit = () => {
           }),
         })
           .then(data => {
-            setAccountBalance(data.user.accountBalance);
+            setAccountBalance(data.accountBalance);
             console.log(user.accountBalance);
           })
 
@@ -78,7 +78,7 @@ export const Deposit = () => {
           <Card.Header className="user">Logged in as: -- {user.email }</Card.Header>
           <Form>
             <FormGroup>
-              <FormLabel className="balance">Current Balance: $ {user.accountBalance} </FormLabel>
+              <FormLabel className="balance">Current Balance: $ {accountBalance} </FormLabel>
             
             </FormGroup>
 
