@@ -29,13 +29,13 @@ export const Deposit = () => {
           setError("Please enter valid deposit amount");
         }
   await axios.patch('http://localhost:8080/api/deposit')
-  //, {
-  //         body: JSON.stringify({
-  //           depositAmount: depositAmount,
-  //          accountBalance: accountBalance + depositAmount,
-  //           accountNumber: accountNumber
-  //         }),
-  //       })
+  , {
+          body: JSON.stringify({
+            depositAmount: depositAmount,
+           accountBalance: accountBalance + depositAmount,
+            accountNumber: accountNumber
+          }),
+        })
           .then(data => {
             setAccountBalance(data.user.accountBalance);
             console.log(user.accountBalance);
@@ -45,7 +45,7 @@ export const Deposit = () => {
           setAccountNumber('');
           setError('');
           setLoading(false);
-          toast(`Success! You have deposited \$ ${depositAmount} into Account #: ${accountNumber}.`);
+          toast(`Success! You have deposited \$ ${depositAmount} into Account #: ${accountNumber}. Current balance: ${accountBalance}`);
         
 } catch (error) {
   console.log(error.message);
