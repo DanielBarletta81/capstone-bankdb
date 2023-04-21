@@ -28,9 +28,10 @@ const makeDeposit = async (req, res) => {
 
   const {accountNumber, depositAmount} = req.body;
     try {
-        const deposit = { $inc: { 'accountBalance': + depositAmount } };
+const deposit = { $inc: { 'accountBalance': + depositAmount } };
         let user = await User.findOneAndUpdate(
-            { 'accountNumber': accountNumber },deposit,
+            { accountNumber: accountNumber },
+           deposit,
             { new: true , returnOriginal: false}
         );
 
@@ -47,10 +48,11 @@ const makeDeposit = async (req, res) => {
                 transactionType: 'Deposit',
                 accountNumber: accountNumber,
                 transactionAmount: depositAmount,
+               accountBalance: + depositAmount
             };
              
             await Transaction.create(transactionDetails)
-            res.status(201).send(`Deposit of ${formatter.format(depositAmount)} to Acct# ${accountNumber} was successful.`)
+            res.status(201).send(`Deposit of ${formatter.format(depositAmount)} to Acct# ${accountNumber} was successful. Your new balance is ${user.accountBalance}`)
         }
       
     } catch (err) {

@@ -11,7 +11,7 @@ router.post('/signup', handleReg);
 
 router.post('/login', userLogin); 
 
-router.patch('/deposit', makeDeposit);
+router.put('/deposit', makeDeposit);
 
 router.patch('/:id', getUserByID, async (req, res) => {
   if (req.body.name != null) {
@@ -31,20 +31,7 @@ router.get('/allData', getAllData);//add auth middleware
 router.get('/balance', getBalance);
 router.get('/transactions', getTransactions);
 router.get('/users/:email', getOneUser);
-// router.delete('/users/:userId', requireSignIn, hasAuthorization, async (req, res) => {
-//     try {
-//         let user = req.profile;
-//         let userDeleted = await user.remove();
-//         userDeleted.hashed_password = undefined;
-//         userDeleted.salt = undefined;
-       
-//         res.json(userDeleted)
-//     } catch (err) {
-//        return res.status(400).json({
-//             error: errorHandler.getErrorMessage(err)
-//         });  
-//     }
-// });
+
 router.get('/transactions/:accountNumber', getTransactions)
  
 // withdrawals
@@ -53,13 +40,13 @@ router.put('/withdraw', makeWithdraw);
 //work 3/1/23
 router.put('/transfer', makeTransfer);
 // works 2/27/23
-router.get('/balance/:account_Nums', async (req, res) => {
+router.get('/balance', async (req, res) => {
   try {
-      const account_Nums = req.params.account_Nums;
+      const accountNumber = req.body.accountNumber;
 
       const result = await User.findOne({
-          account_Nums
-      }).select('balance');
+          accountNumber
+      }).select('accountBalance');
       res.send(result);
   } catch (err) {
     res 

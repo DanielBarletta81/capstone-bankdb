@@ -29,7 +29,7 @@ var port = process.env.PORT;
 //cors
 
 const corsOptions ={
-    origin:'https://main.d3p610ih5d5npd.amplifyapp.com', 
+    origin:['https://main.d3p610ih5d5npd.amplifyapp.com', 'http://localhost:3000'],
     credentials:true,            
     optionSuccessStatus:200
 }

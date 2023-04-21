@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { Button, Card, Form, Container, Alert, FormGroup, FormLabel, FormControl } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
 import { toast } from "react-toastify";
@@ -16,10 +16,16 @@ export const Deposit = () => {
   const [accountNumber, setAccountNumber] = useState(0);
   const [accountBalance, setAccountBalance] = useState(0);
   const [error, setError] = useState('');
-   const [loading, setLoading] = useState(false);
-
+  const [loading, setLoading] = useState(false);
 
   
+  useEffect(() => {
+    axios.get('http://localhost:8080/api/balance')
+      .then((response) => {
+        setAccountBalance(response.data);
+      });
+  }, []);
+
     const onDeposit = async (e) => {
       e.preventDefault();
 
@@ -28,17 +34,16 @@ export const Deposit = () => {
         if (!depositAmount || depositAmount <= 0) {
           setError("Please enter valid deposit amount");
         }
-  await axios.patch('http://localhost:8080/api/deposit'
-  , {
-          body: JSON.stringify({
-            depositAmount: depositAmount,
-           accountBalance: accountBalance + depositAmount,
-            accountNumber: accountNumber
-          }),
-        })
-          .then(data => {
-            setAccountBalance(data.accountBalance);
-            console.log(user.accountBalance);
+        await axios.put('http://localhost:8080/api/deposit', {
+          accountNumber: accountNumber,
+          depositAmount: depositAmount,
+          accountBalance: + depositAmount
+  })
+  
+          .then((response) => {
+            console.log(response.data);
+            setAccountBalance(response.data.accountBalance);
+            console.log(response.data.accountBalance);
           })
 
           setDepositAmount('');
@@ -53,22 +58,22 @@ export const Deposit = () => {
 
 };
 
-  // const showBalance = async () => {
-  //   try {
-  //     await axios.get('http://localhost:8080/api/deposit')
-  //       .then(data => {
-  //         setAccountBalance(data.data.accountBalance);
-  //       });
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  //   showBalance();
-  // }
+  const showBalance = async () => {
+    try {
+      await axios.get('http://localhost:8080/api/balance')
+        .then(data => {
+          setAccountBalance(data.data.accountBalance);
+        });
+    } catch (error) {
+      console.log(error)
+    }
+    showBalance();
+  }
 
   return (
 
     <>
-       <div className='app-user'>Currently logged in user:{user.email} </div>
+       <div className='app-user'>Currently logged in user: {user.email} </div>
   <Container className="d-flex align-items-center justify-content-center">
         <Card className="depCard">
           <Card.Img src={depositPic}></Card.Img>
