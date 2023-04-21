@@ -58,17 +58,6 @@ export const Deposit = () => {
 
 };
 
-  const showBalance = async () => {
-    try {
-      await axios.get('http://localhost:8080/api/balance')
-        .then(data => {
-          setAccountBalance(data.data.accountBalance);
-        });
-    } catch (error) {
-      console.log(error)
-    }
-    showBalance();
-  }
 
   return (
 
