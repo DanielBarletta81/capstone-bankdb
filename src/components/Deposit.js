@@ -22,7 +22,7 @@ export const Deposit = () => {
   useEffect(() => {
     axios.get('http://localhost:8080/api/balance')
       .then((response) => {
-        setAccountBalance(response.data);
+        setAccountBalance(response.data.accountBalance);
       });
   }, []);
 
